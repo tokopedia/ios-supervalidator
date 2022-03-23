@@ -44,4 +44,15 @@ public class SuperValidator {
     public func isFQDN(_ string: String, options: Option.FQDN = .init()) -> Bool {
         return validateFQDN(string, options: options)
     }
+    
+    // MARK: - Email
+
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: domain in String
+    ///    - options: email options
+    /// - Returns: if the domain matches the options, return true
+    public func isEmail(_ string: String, options: Option.Email = .init()) -> Result<Bool, ErrorType> {
+        return validateEmail(string, options: options)
+    }
 }
