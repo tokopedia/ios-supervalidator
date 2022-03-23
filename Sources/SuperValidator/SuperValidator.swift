@@ -45,6 +45,17 @@ public class SuperValidator {
         return validateFQDN(string, options: options)
     }
     
+    // MARK: - Phone
+
+    /// validate phone
+    /// - Parameters:
+    ///   - string: phone in string
+    ///   - options: phone options
+    /// - Returns: if the phone matches the options, return true
+
+    public func isPhoneValid(_ string: String, options: Option.Phone = .init()) -> Result<Bool, ErrorType> {
+        return validatePhone(string, options: options)
+    }
     // MARK: - Email
     
     /// Use this function to custom the error resposne 
