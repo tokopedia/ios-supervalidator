@@ -11,7 +11,7 @@ extension SuperValidator.Option {
     /// URL Options
     public struct URL {
         public typealias Protocols = [String]
-        public typealias Path = String?
+        public typealias Path = [String]
         public typealias Host = [String]
         /// valid protocol ( e.g https. http, ftp )
         public let protocols: Protocols
@@ -20,7 +20,7 @@ extension SuperValidator.Option {
         /// protocol must be the same as one of valid protocol listed in protocols constant
         public let requireValidProtocol: Bool
         /// path ( e.g /user/edit/{userID} )
-        public let path: Path
+        public let paths: Path
         /// query ( e.g page=1&sort=asc )
         public let allowQueryComponents: Bool
         /// hostname must be the same as one of whitelisted host
@@ -34,7 +34,7 @@ extension SuperValidator.Option {
             protocols: Protocols = ["https", "http", "ftp"],
             requireProtocol: Bool = false,
             requireValidProtocol: Bool = true,
-            path: Path = nil,
+            paths: Path = [],
             allowQueryComponents: Bool = true,
             hostWhitelist: Host = [],
             hostBlacklist: Host = [],
@@ -43,7 +43,7 @@ extension SuperValidator.Option {
             self.protocols = protocols
             self.requireProtocol = requireProtocol
             self.requireValidProtocol = requireValidProtocol
-            self.path = path
+            self.paths = paths
             self.allowQueryComponents = allowQueryComponents
             self.hostWhitelist = hostWhitelist
             self.hostBlacklist = hostBlacklist
@@ -89,8 +89,9 @@ extension SuperValidator {
 
         parts = url.components(separatedBy: "/")
         url = parts.removeFirst()
-
-        if let path = options.path, !checkPath(parts, path: path) {
+        
+        let pathOptions = options.paths
+        if pathOptions.isNotEmpty, !checkPath(parts, options: pathOptions) {
             return false
         }
 
@@ -114,6 +115,8 @@ extension SuperValidator {
 
         return true
     }
+    
+    // MARK: - Check Host
 
     fileprivate func checkHost(host: String, matches: [String]) -> Bool {
         for match in matches {
@@ -123,26 +126,57 @@ extension SuperValidator {
         }
         return false
     }
-
-    fileprivate func checkPath(_ paths: [String], path: String) -> Bool {
-        var matches = path.components(separatedBy: "/")
-
-        if let first = matches[safe: 0], first == "" {
-            matches.removeFirst()
+    
+    // MARK: - Check Path
+    
+    fileprivate enum PathType {
+        case fixed(String)
+        case value(String)
+        // TODO: Add Regex Case
+    }
+    
+    fileprivate func checkPath(_ parts: [String], options: [String]) -> Bool {
+        guard parts.isNotEmpty, parts[0].isNotEmpty else { return false }
+        
+        let converted = convertPathOptionsToPathType(options)
+        
+        // match separated count with registered paths
+        let possibleValid = converted.filter { $0.count == parts.count }
+        if possibleValid.isEmpty { return false }
+        
+        var match = 0
+        for possible in possibleValid {
+            match += 1
+            for i in 0..<possible.count {
+                if case let .fixed(key) = possible[i] {
+                    if parts[i] != key {
+                        match = 0
+                        break
+                    }
+                } else if case .value = possible[i] {
+                    if parts[i].isEmpty {
+                        match = 0
+                        break
+                    }
+                }
+            }
+            if match > 0 { return true }
         }
-
-        if matches.count != paths.count {
-            return false
-        }
-
-        for i in 0 ..< matches.count {
-            if matches[i].contains("{") {
-                if paths[i].isEmpty { return false }
-                continue
-            } else if matches[i] != paths[i] {
-                return false
+        return match > 0
+    }
+    
+    fileprivate func convertPathOptionsToPathType(_ options: [String]) -> [[PathType]] {
+        return options.map { path -> [PathType] in
+            let parts = path.split(separator: "/")
+            return parts.map { str -> PathType in
+                if str.first == "{" {
+                    var temp = str
+                    temp.removeFirst()
+                    temp.removeLast()
+                    return .value(String(temp))
+                }
+                return .fixed(String(str))
             }
         }
-        return true
     }
 }

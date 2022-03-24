@@ -1,5 +1,5 @@
 //
-//  SuperValidatorTests.swift
+//  SocialMediaURLValidatorTests.swift
 //  
 //
 //  Created by alvin.pratama on 22/03/22.
@@ -9,7 +9,7 @@ import XCTest
 
 @testable import SuperValidator
 
-internal final class SuperValidatorTests: XCTestCase {
+internal final class SocialMediaURLValidatorTests: XCTestCase {
     private let validator = SuperValidator.shared
     
     // MARK: - Instagram
@@ -89,7 +89,7 @@ internal final class SuperValidatorTests: XCTestCase {
     }
     
     internal func testTiktokURLWithInvalidHostname() {
-        let url = "tiktok.com/myuser"
+        let url = "invalid.com/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .tiktok)
         XCTAssertFalse(isURL)
     }
@@ -101,7 +101,7 @@ internal final class SuperValidatorTests: XCTestCase {
     }
     
     internal func testTiktokURLWithWhiteSpace() {
-        let url = "vt. tiktok.com/myuser"
+        let url = "vt.tiktok.com/myus er"
         let isURL = self.validator.isURL(url, socialMedia: .tiktok)
         XCTAssertFalse(isURL)
     }
@@ -126,6 +126,24 @@ internal final class SuperValidatorTests: XCTestCase {
         XCTAssertTrue(isURL)
     }
     
+    internal func testYoutubeURLWithCPath() {
+        let url = "www.youtube.com/c/mychannel"
+        let isURL = self.validator.isURL(url, socialMedia: .youtube)
+        XCTAssertTrue(isURL)
+    }
+    
+    internal func testYoutubeURLWithIDPath() {
+        let url = "www.youtube.com/id/123"
+        let isURL = self.validator.isURL(url, socialMedia: .youtube)
+        XCTAssertTrue(isURL)
+    }
+    
+    internal func testYoutubeURLWithChannelPath() {
+        let url = "www.youtube.com/channel/mychannel"
+        let isURL = self.validator.isURL(url, socialMedia: .youtube)
+        XCTAssertTrue(isURL)
+    }
+    
     internal func testYoutubeURLWithInvalidProtocol() {
         let url = "ftp://www.youtube.com/user/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .youtube)
@@ -139,19 +157,19 @@ internal final class SuperValidatorTests: XCTestCase {
     }
     
     internal func testYoutubeURLInvalidPath() {
-        let url = "www.youtuber.com/profile/myuser"
+        let url = "www.youtube.com/profile/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .youtube)
         XCTAssertFalse(isURL)
     }
     
     internal func testYoutubeURLWithInvalidPath2() {
-        let url = "www.youtuber.com/myuser"
+        let url = "www.youtube.com/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .youtube)
         XCTAssertFalse(isURL)
     }
     
     internal func testYoutubeURLWithWhiteSpace() {
-        let url = "www.youtuber.com/myus er"
+        let url = "www.youtube.com/myus er"
         let isURL = self.validator.isURL(url, socialMedia: .twitter)
         XCTAssertFalse(isURL)
     }
@@ -188,7 +206,7 @@ internal final class SuperValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
-    internal func testITwitterURLWithoutPath() {
+    internal func testTwitterURLWithoutPath() {
         let url = "https://twitter.com/"
         let isURL = self.validator.isURL(url, socialMedia: .twitter)
         XCTAssertFalse(isURL)
