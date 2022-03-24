@@ -144,25 +144,25 @@ extension SuperValidator {
         let possibleValid = converted.filter { $0.count == parts.count }
         if possibleValid.isEmpty { return false }
         
-        var match = 0
+        var matchExists: Bool = false
         for possible in possibleValid {
-            match += 1
+            matchExists = true
             for i in 0..<possible.count {
                 if case let .fixed(key) = possible[i] {
                     if parts[i] != key {
-                        match = 0
+                        matchExists = false
                         break
                     }
                 } else if case .value = possible[i] {
                     if parts[i].isEmpty {
-                        match = 0
+                        matchExists = false
                         break
                     }
                 }
             }
-            if match > 0 { return true }
+            if matchExists { return true }
         }
-        return match > 0
+        return matchExists
     }
     
     fileprivate func convertPathOptionsToPathType(_ options: [String]) -> [[PathType]] {
