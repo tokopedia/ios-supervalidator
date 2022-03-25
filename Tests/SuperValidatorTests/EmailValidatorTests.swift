@@ -15,7 +15,7 @@ internal final class EmailValidatorTests: XCTestCase {
     
     // Valid
     internal func testValidEmail() {
-        let isEmail = self.validator.isEmail("teddy@tokopedia.com")
+        let isEmail = self.validator.isEmail("teddy@test.com")
         switch isEmail {
         case let .success(value):
             XCTAssertTrue(value)
@@ -26,7 +26,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithPersonalNameLength() {
-        let isEmail = self.validator.isEmail("teddy@tokopedia.com", options: SuperValidator.Option.Email(lengthLimitPersonalName: 8))
+        let isEmail = self.validator.isEmail("teddy@test.com", options: SuperValidator.Option.Email(lengthLimitPersonalName: 8))
         switch isEmail {
         case let .success(value):
             XCTAssertTrue(value)
@@ -36,7 +36,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithSpecificHostName() {
-        let isEmail = self.validator.isEmail("teddy@tokopedia.com", options: SuperValidator.Option.Email(specificHost: ["tokopedia", "goto", "gojek"]))
+        let isEmail = self.validator.isEmail("teddy@test.com", options: SuperValidator.Option.Email(specificHost: ["test", "tost", "tist"]))
 
         switch isEmail {
         case let .success(value):
@@ -47,7 +47,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithNotBlackListedHost() {
-        let isEmail = self.validator.isEmail("teddy@tokopedia.com", options: SuperValidator.Option.Email(hostBlacklist: ["shopee"]))
+        let isEmail = self.validator.isEmail("teddy@test.com", options: SuperValidator.Option.Email(hostBlacklist: ["tist"]))
 
         switch isEmail {
         case let .success(value):
@@ -58,7 +58,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithSpecificTDL() {
-        let isEmail = self.validator.isEmail("teddy@tokopedia.com", options: SuperValidator.Option.Email(specificDomainList: ["id", "com"]))
+        let isEmail = self.validator.isEmail("teddy@test.com", options: SuperValidator.Option.Email(specificDomainList: ["id", "com"]))
 
         switch isEmail {
         case let .success(value):
@@ -80,7 +80,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithInvalidPersonalNameLength() {
-        let isEmail = self.validator.isEmail("teddychristopher@tokopedia.com", options: SuperValidator.Option.Email(lengthLimitPersonalName: 8))
+        let isEmail = self.validator.isEmail("teddychristopher@test.com", options: SuperValidator.Option.Email(lengthLimitPersonalName: 8))
         switch isEmail {
         case let .success(value):
             XCTAssertTrue(value)
@@ -90,7 +90,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithInvalidHostName() {
-        let isEmail = self.validator.isEmail("teddy@shopee.com", options: SuperValidator.Option.Email(specificHost: ["tokopedia", "goto", "gojek"]))
+        let isEmail = self.validator.isEmail("teddy@tast.com", options: SuperValidator.Option.Email(specificHost: ["test", "tist", "tost"]))
 
         switch isEmail {
         case let .success(value):
@@ -101,7 +101,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithHostBlacklisted() {
-        let isEmail = self.validator.isEmail("teddy@shopee.com", options: SuperValidator.Option.Email(hostBlacklist: ["shopee"]))
+        let isEmail = self.validator.isEmail("teddy@tast.com", options: SuperValidator.Option.Email(hostBlacklist: ["tast"]))
 
         switch isEmail {
         case let .success(value):
@@ -112,7 +112,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithInvalidTDL() {
-        let isEmail = self.validator.isEmail("teddy@tokopedia.us", options: SuperValidator.Option.Email(specificDomainList: ["id", "com"]))
+        let isEmail = self.validator.isEmail("teddy@test.us", options: SuperValidator.Option.Email(specificDomainList: ["id", "com"]))
 
         switch isEmail {
         case let .success(value):
@@ -124,8 +124,8 @@ internal final class EmailValidatorTests: XCTestCase {
     
     // Combine the options
     internal func testValidEmailWithAllOptionsAndInvalidLength() {
-        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificDomainList: ["com", "id"], hostBlacklist: ["shopee"], specificHost: ["tokopedia", "goto", "gojek"])
-        let isEmail = SuperValidator.shared.isEmail("teddyyyasad@tokopedia.com", options: emailOptionAll)
+        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificDomainList: ["com", "id"], hostBlacklist: ["tast"], specificHost: ["test", "tist", "tust"])
+        let isEmail = SuperValidator.shared.isEmail("teddyyyasad@test.com", options: emailOptionAll)
         switch isEmail {
         case .success(_):
             break
@@ -135,8 +135,8 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithAllOptionsAndInvalidHostName() {
-        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificDomainList: ["com", "id"], hostBlacklist: ["bukalapak"], specificHost: ["tokopedia", "goto", "gojek"])
-        let isEmail = SuperValidator.shared.isEmail("teddyd@shopee.com", options: emailOptionAll)
+        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificDomainList: ["com", "id"], hostBlacklist: ["tast"], specificHost: ["test", "tist", "tust"])
+        let isEmail = SuperValidator.shared.isEmail("teddyd@tost.com", options: emailOptionAll)
         switch isEmail {
         case  .success(_):
             break
@@ -146,8 +146,8 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithAllOptionsAndInvalidTDL() {
-        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificDomainList: ["com", "id"], hostBlacklist: ["shopee"], specificHost: ["tokopedia", "goto", "gojek"])
-        let isEmail = SuperValidator.shared.isEmail("teddyd@goto.us", options: emailOptionAll)
+        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificDomainList: ["com", "id"], hostBlacklist: ["tast"], specificHost: ["test", "tist", "tust"])
+        let isEmail = SuperValidator.shared.isEmail("teddyd@test.us", options: emailOptionAll)
         switch isEmail {
         case .success(_):
             break
