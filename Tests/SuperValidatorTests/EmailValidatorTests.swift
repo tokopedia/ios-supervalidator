@@ -18,9 +18,8 @@ internal final class EmailValidatorTests: XCTestCase {
         let isEmail = self.validator.isEmail("teddy@test.com")
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case .failure:
-
             break
         }
     }
@@ -29,7 +28,7 @@ internal final class EmailValidatorTests: XCTestCase {
         let isEmail = self.validator.isEmail("teddy@test.com", options: SuperValidator.Option.Email(lengthLimitPersonalName: 8))
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case .failure:
             break
         }
@@ -40,7 +39,7 @@ internal final class EmailValidatorTests: XCTestCase {
 
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case .failure:
             break
         }
@@ -51,18 +50,18 @@ internal final class EmailValidatorTests: XCTestCase {
 
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case .failure:
             break
         }
     }
     
-    internal func testValidEmailWithSpecificTDL() {
+    internal func testValidEmailWithSpecificTLD() {
         let isEmail = self.validator.isEmail("teddy@test.com", options: SuperValidator.Option.Email(specificDomainList: ["id", "com"]))
 
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case .failure:
             break
         }
@@ -83,7 +82,7 @@ internal final class EmailValidatorTests: XCTestCase {
         let isEmail = self.validator.isEmail("teddychristopher@test.com", options: SuperValidator.Option.Email(lengthLimitPersonalName: 8))
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case let .failure(error):
             XCTAssertEqual(error.localizedDescription, "Personal name must less than 8")
         }
@@ -94,7 +93,7 @@ internal final class EmailValidatorTests: XCTestCase {
 
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case let .failure(error):
             XCTAssertEqual(error.localizedDescription, "Host is not allowed")
         }
@@ -105,7 +104,7 @@ internal final class EmailValidatorTests: XCTestCase {
 
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case let .failure(error):
             XCTAssertEqual(error.localizedDescription, "Your host is blacklisted")
         }
@@ -116,7 +115,7 @@ internal final class EmailValidatorTests: XCTestCase {
 
         switch isEmail {
         case let .success(value):
-            XCTAssertTrue(value)
+            XCTAssertNotNil(value)
         case let .failure(error):
             XCTAssertEqual(error.localizedDescription, "Your domain is not allowed")
         }

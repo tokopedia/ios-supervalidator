@@ -32,7 +32,7 @@ extension SuperValidator.Option {
 }
 
 extension SuperValidator {
-    internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Bool, ErrorType> {
+    internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, ErrorType> {
         let _string = string
         
         var subStrings = _string.components(separatedBy: "@").filter { $0.isNotEmpty }
@@ -57,7 +57,7 @@ extension SuperValidator {
             // Set Personal name Length
             if options.lengthLimitPersonalName != 0 {
                 if personalName.count > options.lengthLimitPersonalName {
-                        return .failure(.displayNameMoreThanLimit(errMessage: "Personal name must less than \(options.lengthLimitPersonalName)"))
+                        return .failure(.displayNameMoreThanLimit(errorMessage: "Personal name must less than \(options.lengthLimitPersonalName)"))
                 }
             }
 
@@ -73,7 +73,7 @@ extension SuperValidator {
                         }
                     }
                 if isFound == false {
-                    return .failure(.specificHost(errMessage: "Host is not allowed"))
+                    return .failure(.specificHost(errorMessage: "Host is not allowed"))
                 }
             }
             
@@ -81,19 +81,19 @@ extension SuperValidator {
             if options.specificHostBlacklist.isNotEmpty, let _ = options.specificHostBlacklist.first(where: {
                 $0 == hostName
             }) {
-                return .failure(.blacklistHost(errMessage: "Your host is blacklisted"))
+                return .failure(.blacklistHost(errorMessage: "Your host is blacklisted"))
             }
       
             // Top Level Domain
             if options.specificDomainList.isNotEmpty, let _ = options.specificDomainList.first(where: {
                 $0 == tld
             }) {
-                return .failure(.levelDomainHost(errMessage: "Your domain is not allowed"))
+                return .failure(.levelDomainHost(errorMessage: "Your domain is not allowed"))
             }
         } else {
             return .failure(ErrorType.emailInvalid(errorMessage: "Invalid Email"))
         }
 
-        return .success(true)
+        return .success(())
     }
 }

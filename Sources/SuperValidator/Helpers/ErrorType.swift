@@ -8,30 +8,29 @@
 import Foundation
 
 public enum ErrorType: Error {
-    case displayNameMoreThanLimit(errMessage: String)
-    case specificHost(errMessage: String)
-    case blacklistHost(errMessgea: String)
-    case blacklistHost(errMessage: String)
-    case levelDomainHost(errMessage: String)
+    case displayNameMoreThanLimit(errorMessage: String)
+    case specificHost(errorMessage: String)
+    case blacklistHost(errorMessage: String)
+    case levelDomainHost(errorMessage: String)
     case emailInvalid(errorMessage: String)
 }
 
 extension ErrorType: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case let .displayNameMoreThanLimit(errMessage):
-            return NSLocalizedString(errMessage, comment: "")
+        case let .displayNameMoreThanLimit(errorMessage):
+            return NSLocalizedString(errorMessage, comment: "")
 
-        case let .specificHost(errMessage):
-            return NSLocalizedString(errMessage, comment: "")
+        case let .specificHost(errorMessage):
+            return NSLocalizedString(errorMessage, comment: "")
 
-        case let .blacklistHost(errMessage):
-            return NSLocalizedString(errMessage, comment: "")
+        case let .blacklistHost(errorMessage):
+            return NSLocalizedString(errorMessage, comment: "")
 
-        case let .levelDomainHost(errMessage):
-            return NSLocalizedString(errMessage, comment: "")
-        case let .emailInvalid(errMessage):
-            return NSLocalizedString(errMessage, comment: "")
+        case let .levelDomainHost(errorMessage):
+            return NSLocalizedString(errorMessage, comment: "")
+        case let .emailInvalid(errorMessage):
+            return NSLocalizedString(errorMessage, comment: "")
         }
     }
 }
