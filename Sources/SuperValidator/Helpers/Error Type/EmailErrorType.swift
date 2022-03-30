@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ErrorType: Error {
+public enum EmailErrorType: Error {
     case displayNameMoreThanLimit(errorMessage: String)
     case specificHost(errorMessage: String)
     case blacklistHost(errorMessage: String)
@@ -15,7 +15,7 @@ public enum ErrorType: Error {
     case emailInvalid(errorMessage: String)
 }
 
-extension ErrorType: LocalizedError {
+extension EmailErrorType: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .displayNameMoreThanLimit(errorMessage):

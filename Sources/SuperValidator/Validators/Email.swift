@@ -32,13 +32,13 @@ extension SuperValidator.Option {
 }
 
 extension SuperValidator {
-    internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, ErrorType> {
+    internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
         let _string = string
         
         var subStrings = _string.components(separatedBy: "@").filter { $0.isNotEmpty }
         // The expected is 2 because there are name and domain
         if subStrings.count < 2 {
-            return .failure(ErrorType.emailInvalid(errorMessage: "Invalid Email"))
+            return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
         }
         
         // Default Match
@@ -51,7 +51,7 @@ extension SuperValidator {
             let tld = domain.components(separatedBy: ".")[safe: 1]
             
             if domainParts.count < 2 {
-                 return .failure(ErrorType.emailInvalid(errorMessage: "Invalid Email"))
+                 return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
             }
             
             // Set Personal name Length
@@ -91,7 +91,7 @@ extension SuperValidator {
                 return .failure(.levelDomainHost(errorMessage: "Your domain is not allowed"))
             }
         } else {
-            return .failure(ErrorType.emailInvalid(errorMessage: "Invalid Email"))
+            return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
         }
 
         return .success(())

@@ -52,7 +52,19 @@ public class SuperValidator {
     ///    - string: domain in String
     ///    - options: email options
     /// - Returns: if the domain matches the options, return true
-    public func isEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, ErrorType> {
+    public func checkedEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
         return validateEmail(string, options: options)
     }
+    
+    public func isEmail(_ string: String, options: Option.Email = .init()) -> Bool {
+        let result = checkedEmail(string, options: options)
+        switch result {
+        case .success(_):
+           return true
+        case .failure(_):
+            return false
+        }
+    }
+ 
 }
+
