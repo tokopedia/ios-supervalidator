@@ -34,6 +34,10 @@ extension SuperValidator.Option {
 extension SuperValidator {
     internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
         var subStrings = string.components(separatedBy: "@").filter { $0.isNotEmpty }
+        
+        guard string.matches(Regex.emailStrict) else {
+            return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
+
         // The expected is 2 because there are name and domain
         if subStrings.count < 2 {
             return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
@@ -41,7 +45,6 @@ extension SuperValidator {
         
         // Default Match
         // ex : teddy@tokopedia.com
-        if string.matches(Regex.emailStrict) {
             let personalName = subStrings.removeFirst()
             let domain = subStrings.removeLast()
             let domainParts = domain.components(separatedBy: ".").filter { $0.isNotEmpty }
@@ -88,8 +91,6 @@ extension SuperValidator {
             }) {
                 return .failure(.levelDomainHost(errorMessage: "Your domain is not allowed"))
             }
-        } else {
-            return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
         }
 
         return .success(())
