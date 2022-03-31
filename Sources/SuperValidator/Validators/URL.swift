@@ -83,8 +83,9 @@ extension SuperValidator {
 
 extension SuperValidator {
     internal func urlValidator(_ string: String, options: Option.URL) -> Result<Void, URLError> {
-        guard string.isNotEmpty, string.matches(Regex.url) else { return .failure(.notUrl) }
+        guard string.isNotEmpty else { return .failure(.notUrl) }
         guard !string.containsWhitespace else { return .failure(.containsWhitespace) }
+        guard string.matches(Regex.url) else { return .failure(.notUrl) }
         
         var url = string
 

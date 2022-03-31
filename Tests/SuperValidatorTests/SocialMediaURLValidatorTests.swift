@@ -62,6 +62,74 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
+    // MARK: - Instagram + Error Reasons
+    
+    internal func testValidInstagramURL_ErrorReason() {
+        let url = "https://instagram.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .instagram)
+        switch result {
+        case .success:
+            XCTAssertTrue(true)
+        case let .failure(error):
+            XCTFail("Expected to be a success but got a failure with \(error)")
+        }
+    }
+    
+    internal func testInstagramURLWithInvalidProtocol_ErrorReason() {
+        let url = "ftp://www.instagram.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .instagram)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidProtocol)
+        }
+    }
+
+    internal func testInstagramURLWithInvalidHostname_ErrorReason() {
+        let url = "www.tiktok.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .instagram)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+        }
+    }
+
+    internal func testInstagramURLWithoutPath_ErrorReason() {
+        let url = "www.instagram.com/"
+        let result = self.validator.validateURL(url, socialMedia: .instagram)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidPath)
+        }
+    }
+
+    internal func testInstagramURLWithInvalidPath_ErrorReason() {
+        let url = "www.instagram.com/user/a"
+        let result = self.validator.validateURL(url, socialMedia: .instagram)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidPath)
+        }
+    }
+
+    internal func testInstagramURLWithWhiteSpace_ErrorReason() {
+        let url = "www. instagram.com/myuser/a"
+        let result = self.validator.validateURL(url, socialMedia: .instagram)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.containsWhitespace)
+        }
+    }
+    
     // MARK: - Tiktok
     
     internal func testValidTiktokURL() {
@@ -104,6 +172,74 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         let url = "vt.tiktok.com/myus er"
         let isURL = self.validator.isURL(url, socialMedia: .tiktok)
         XCTAssertFalse(isURL)
+    }
+    
+    // MARK: - Tiktok + ErrorReasons
+    
+    internal func testValidTiktokURL_ErrorReason() {
+        let url = "https://vt.tiktok.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .tiktok)
+        switch result {
+        case .success:
+            XCTAssertTrue(true)
+        case let .failure(error):
+            XCTFail("Expected to be a success but got a failure with \(error)")
+        }
+    }
+
+    internal func testTiktokURLWithWWW_ErrorReason() {
+        let url = "https://www.vt.tiktok.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .tiktok)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+        }
+    }
+
+    internal func testTiktokURLWithInvalidProtocol_ErrorReason() {
+        let url = "ftp://vt.tiktok.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .tiktok)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidProtocol)
+        }
+    }
+
+    internal func testTiktokURLWithInvalidHostname_ErrorReason() {
+        let url = "invalid.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .tiktok)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+        }
+    }
+
+    internal func testTiktokURLWithInvalidPath_ErrorReason() {
+        let url = "https://vt.tiktok.com/myuser/a"
+        let result = self.validator.validateURL(url, socialMedia: .tiktok)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidPath)
+        }
+    }
+
+    internal func testTiktokURLWithWhiteSpace_ErrorReason() {
+        let url = "vt.tiktok.com/myus er"
+        let result = self.validator.validateURL(url, socialMedia: .tiktok)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.containsWhitespace)
+        }
     }
     
     // MARK: - Youtube
@@ -174,6 +310,74 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
+    // MARK: - Youtube + Error Reasons
+    
+    internal func testValidYoutubeURL_ErrorReason() {
+        let url = "https://youtube.com/user/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .youtube)
+        switch result {
+        case .success:
+            XCTAssertTrue(true)
+        case let .failure(error):
+            XCTFail("Expected to be a success but got a failure with \(error)")
+        }
+    }
+    
+    internal func testYoutubeURLWithInvalidProtocol_ErrorReason() {
+        let url = "ftp://www.youtube.com/user/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .youtube)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidProtocol)
+        }
+    }
+    
+    internal func testYoutubeURLWithInvalidHostname_ErrorReason() {
+        let url = "www.youtuber.com/user/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .youtube)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+        }
+    }
+    
+    internal func testYoutubeURLInvalidPath_ErrorReason() {
+        let url = "www.youtube.com/profile/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .youtube)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidPath)
+        }
+    }
+    
+    internal func testYoutubeURLWithInvalidPath2_ErrorReason() {
+        let url = "www.youtube.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .youtube)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidPath)
+        }
+    }
+    
+    internal func testYoutubeURLWithWhiteSpace_ErrorReason() {
+        let url = "www.youtube.com/myus er"
+        let result = self.validator.validateURL(url, socialMedia: .youtube)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.containsWhitespace)
+        }
+    }
+    
     // MARK: - Twitter
     
     internal func testValidTwitterURL() {
@@ -222,5 +426,73 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         let url = "www.twitter.c om/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .twitter)
         XCTAssertFalse(isURL)
+    }
+    
+    // MARK: - Twitter + Error Reasons
+    
+    internal func testValidTwitterURL_ErrorReason() {
+        let url = "https://twitter.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .twitter)
+        switch result {
+        case .success:
+            XCTAssertTrue(true)
+        case let .failure(error):
+            XCTFail("Expected to be a success but got a failure with \(error)")
+        }
+    }
+    
+    internal func testTwitterURLWithInvalidProtocol_ErrorReason() {
+        let url = "ftp://www.twitter.com/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .twitter)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidProtocol)
+        }
+    }
+    
+    internal func testTwitterURLWithInvalidHostname_ErrorReason() {
+        let url = "www.twitter.co.id/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .twitter)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+        }
+    }
+    
+    internal func testTwitterURLWithoutPath_ErrorReason() {
+        let url = "https://twitter.com/"
+        let result = self.validator.validateURL(url, socialMedia: .twitter)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidPath)
+        }
+    }
+    
+    internal func testTwitterURLWithInvalidPath_ErrorReason() {
+        let url = "www.twitter.com/user/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .twitter)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.invalidPath)
+        }
+    }
+    
+    internal func testTwitterURLWithWhiteSpace_ErrorReason() {
+        let url = "www.twitter.c om/myuser"
+        let result = self.validator.validateURL(url, socialMedia: .twitter)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.containsWhitespace)
+        }
     }
 }
