@@ -59,6 +59,7 @@ extension SuperValidator.Option {
 extension SuperValidator {
     public enum URLError: Error, LocalizedError {
         case notUrl
+        case containsWhitespace
         case containsQueryComponents
         case invalidProtocol
         case noProtocol
@@ -70,8 +71,8 @@ extension SuperValidator {
             switch self {
             case .notUrl:
                 return "Please enter an url"
-            case .containsQueryComponents, .invalidProtocol, .noProtocol,
-                 .invalidPath, .invalidHost, .blacklistedHost:
+            case .containsWhitespace, .containsQueryComponents, .invalidProtocol,
+                 .noProtocol, .invalidPath, .invalidHost, .blacklistedHost:
                 return nil
             }
         }
@@ -82,7 +83,9 @@ extension SuperValidator {
 
 extension SuperValidator {
     internal func urlValidator(_ string: String, options: Option.URL) -> Result<Void, URLError> {
-        guard string.isNotEmpty, !string.containsWhitespace else { return .failure(.notUrl) }
+        guard string.isNotEmpty, string.matches(Regex.url) else { return .failure(.notUrl) }
+        guard !string.containsWhitespace else { return .failure(.containsWhitespace) }
+        
         var url = string
 
         if !options.allowQueryComponents, url.contains("?") || url.contains("&") {
