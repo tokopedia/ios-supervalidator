@@ -64,8 +64,8 @@ internal final class URLValidatorTests: XCTestCase {
         requireValidProtocol: true,
         paths: ["/shop/{shopSlug}"],
         allowQueryComponents: false,
-        hostWhitelist: [#"(www\.)?(tokopedia\.com)"#],
-        hostBlacklist: [],
+        domainWhitelist: [#"(www\.)?(tokopedia\.com)"#],
+        domainBlacklist: [],
         fqdn: .init()
     )
     
@@ -93,7 +93,7 @@ internal final class URLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
-    internal func testURLWithInvalidHostname_UseCustomOptions() {
+    internal func testURLWithInvalidDomain_UseCustomOptions() {
         let url = "https://www.example.com/shop/test"
         let isURL = self.validator.isURL(url, options: customOptions)
         XCTAssertFalse(isURL)
@@ -105,15 +105,15 @@ internal final class URLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
-    internal func testURLWithBlacklistedHostname_UseCustomOptions() {
+    internal func testURLWithBlacklistedDomain_UseCustomOptions() {
         let blacklistedOptions: SuperValidator.Option.URL = .init(
             protocols: ["https", "http"],
             requireProtocol: false,
             requireValidProtocol: true,
             paths: [],
             allowQueryComponents: false,
-            hostWhitelist: [],
-            hostBlacklist: [#"(www\.)?(blacklisted\.com)"#],
+            domainWhitelist: [],
+            domainBlacklist: [#"(www\.)?(blacklisted\.com)"#],
             fqdn: .init()
         )
         
@@ -183,14 +183,14 @@ internal final class URLValidatorTests: XCTestCase {
         }
     }
 
-    internal func testURLWithInvalidHostname_ErrorReason() {
+    internal func testURLWithInvalidDomain_ErrorReason() {
         let url = "https://www.example.com/shop/test"
         let result = self.validator.validateURL(url, options: customOptions)
         switch result {
         case .success:
             XCTFail("Expected to be a failure but got a success")
         case let .failure(error):
-            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+            XCTAssertEqual(error, SuperValidator.URLError.invalidDomain)
         }
     }
 
@@ -216,15 +216,15 @@ internal final class URLValidatorTests: XCTestCase {
         }
     }
 
-    internal func testURLWithBlacklistedHostname_ErrorReason() {
+    internal func testURLWithBlacklistedDomain_ErrorReason() {
         let blacklistedOptions: SuperValidator.Option.URL = .init(
             protocols: ["https", "http"],
             requireProtocol: false,
             requireValidProtocol: true,
             paths: [],
             allowQueryComponents: false,
-            hostWhitelist: [],
-            hostBlacklist: [#"(www\.)?(blacklisted\.com)"#],
+            domainWhitelist: [],
+            domainBlacklist: [#"(www\.)?(blacklisted\.com)"#],
             fqdn: .init()
         )
 
@@ -243,7 +243,7 @@ internal final class URLValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got a success")
         case let .failure(error):
-            XCTAssertEqual(error, SuperValidator.URLError.blacklistedHost)
+            XCTAssertEqual(error, SuperValidator.URLError.blacklistedDomain)
         }
     }
 }

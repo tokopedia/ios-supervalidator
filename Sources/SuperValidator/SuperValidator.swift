@@ -19,7 +19,7 @@ public class SuperValidator {
     /// validate url with custom options
     /// - Parameters:
     ///   - string: url string
-    ///   - options: url options such as valid protocols, hostname, path.
+    ///   - options: url options such as valid protocols, domain, path.
     /// - Returns: if the url matches the options, return true
     public func isURL(_ string: String, options: Option.URL = .init()) -> Bool {
         let result = urlValidator(string, options: options)

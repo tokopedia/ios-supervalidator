@@ -14,7 +14,7 @@ extension SuperValidator.Option {
     public struct URL {
         public typealias Protocols = [String]
         public typealias Path = [String]
-        public typealias Host = [String]
+        public typealias Domain = [String]
         /// valid protocol ( e.g https. http, ftp )
         public let protocols: Protocols
         /// if true, url must have protocol
@@ -25,10 +25,10 @@ extension SuperValidator.Option {
         public let paths: Path
         /// query ( e.g page=1&sort=asc )
         public let allowQueryComponents: Bool
-        /// hostname must be the same as one of whitelisted host
-        public let hostWhitelist: Host
-        /// hostname can't be the same as one of blacklisted host
-        public let hostBlacklist: Host
+        /// domain must be the same as one of whitelisted domain
+        public let domainWhitelist: Domain
+        /// domain can't be the same as one of blacklisted domain
+        public let domainBlacklist: Domain
         /// Fully Qualified Domain Name`
         public let fqdn: FQDN
 
@@ -38,8 +38,8 @@ extension SuperValidator.Option {
             requireValidProtocol: Bool = true,
             paths: Path = [],
             allowQueryComponents: Bool = true,
-            hostWhitelist: Host = [],
-            hostBlacklist: Host = [],
+            domainWhitelist: Domain = [],
+            domainBlacklist: Domain = [],
             fqdn: FQDN = .init()
         ) {
             self.protocols = protocols
@@ -47,8 +47,8 @@ extension SuperValidator.Option {
             self.requireValidProtocol = requireValidProtocol
             self.paths = paths
             self.allowQueryComponents = allowQueryComponents
-            self.hostWhitelist = hostWhitelist
-            self.hostBlacklist = hostBlacklist
+            self.domainWhitelist = domainWhitelist
+            self.domainBlacklist = domainBlacklist
             self.fqdn = fqdn
         }
     }
@@ -65,9 +65,9 @@ extension SuperValidator {
         case invalidProtocol
         case noProtocol
         case invalidPath
-        /// host not contained in hostWhitelist parameter
-        case invalidHost
-        case blacklistedHost
+        /// domain not contained in domainWhitelist parameter
+        case invalidDomain
+        case blacklistedDomain
         case fqdn(FQDNError)
         
         public var errorDescription: String? {
@@ -75,7 +75,7 @@ extension SuperValidator {
             case .notUrl:
                 return "Please enter an url"
             case .containsWhitespace, .containsQueryComponents, .invalidProtocol,
-                 .noProtocol, .invalidPath, .invalidHost, .blacklistedHost,
+                 .noProtocol, .invalidPath, .invalidDomain, .blacklistedDomain,
                  .fqdn:
                 return nil
             }
@@ -135,17 +135,17 @@ extension SuperValidator {
             return .failure(.notUrl)
         }
 
-        let hostname = url
+        let domain = url
 
-        if options.hostWhitelist.isNotEmpty, !checkHost(host: hostname, matches: options.hostWhitelist) {
-            return .failure(.invalidHost)
+        if options.domainWhitelist.isNotEmpty, !checkDomain(domain, matches: options.domainWhitelist) {
+            return .failure(.invalidDomain)
         }
 
-        if options.hostBlacklist.isNotEmpty, checkHost(host: hostname, matches: options.hostBlacklist) {
-            return .failure(.blacklistedHost)
+        if options.domainBlacklist.isNotEmpty, checkDomain(domain, matches: options.domainBlacklist) {
+            return .failure(.blacklistedDomain)
         }
         
-        let fqdnResult = validateFQDN(hostname, options: options.fqdn)
+        let fqdnResult = validateFQDN(domain, options: options.fqdn)
         if case let .failure(error) = fqdnResult {
             if error == .containsWhitespace {
                 return .failure(.containsWhitespace)
@@ -157,11 +157,11 @@ extension SuperValidator {
         return .success(())
     }
     
-    // MARK: - Check Host
+    // MARK: - Check Domain
 
-    fileprivate func checkHost(host: String, matches: [String]) -> Bool {
+    fileprivate func checkDomain(_ domain: String, matches: [String]) -> Bool {
         for match in matches {
-            if host == match || host.matches(match) {
+            if domain == match || domain.matches(match) {
                 return true
             }
         }

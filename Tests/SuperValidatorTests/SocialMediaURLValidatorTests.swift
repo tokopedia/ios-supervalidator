@@ -38,7 +38,7 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
-    internal func testInstagramURLWithInvalidHostname() {
+    internal func testInstagramURLWithInvalidDomain() {
         let url = "www.tiktok.com/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .instagram)
         XCTAssertFalse(isURL)
@@ -86,14 +86,14 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         }
     }
 
-    internal func testInstagramURLWithInvalidHostname_ErrorReason() {
+    internal func testInstagramURLWithInvalidDomain_ErrorReason() {
         let url = "www.tiktok.com/myuser"
         let result = self.validator.validateURL(url, socialMedia: .instagram)
         switch result {
         case .success:
             XCTFail("Expected to be a failure but got a success")
         case let .failure(error):
-            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+            XCTAssertEqual(error, SuperValidator.URLError.invalidDomain)
         }
     }
 
@@ -156,7 +156,7 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
-    internal func testTiktokURLWithInvalidHostname() {
+    internal func testTiktokURLWithInvalidDomain() {
         let url = "invalid.com/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .tiktok)
         XCTAssertFalse(isURL)
@@ -194,7 +194,7 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got a success")
         case let .failure(error):
-            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+            XCTAssertEqual(error, SuperValidator.URLError.invalidDomain)
         }
     }
 
@@ -209,14 +209,14 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         }
     }
 
-    internal func testTiktokURLWithInvalidHostname_ErrorReason() {
+    internal func testTiktokURLWithInvalidDomain_ErrorReason() {
         let url = "invalid.com/myuser"
         let result = self.validator.validateURL(url, socialMedia: .tiktok)
         switch result {
         case .success:
             XCTFail("Expected to be a failure but got a success")
         case let .failure(error):
-            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+            XCTAssertEqual(error, SuperValidator.URLError.invalidDomain)
         }
     }
 
@@ -286,7 +286,7 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
-    internal func testYoutubeURLWithInvalidHostname() {
+    internal func testYoutubeURLWithInvalidDomain() {
         let url = "www.youtuber.com/user/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .youtube)
         XCTAssertFalse(isURL)
@@ -334,14 +334,14 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         }
     }
     
-    internal func testYoutubeURLWithInvalidHostname_ErrorReason() {
+    internal func testYoutubeURLWithInvalidDomain_ErrorReason() {
         let url = "www.youtuber.com/user/myuser"
         let result = self.validator.validateURL(url, socialMedia: .youtube)
         switch result {
         case .success:
             XCTFail("Expected to be a failure but got a success")
         case let .failure(error):
-            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+            XCTAssertEqual(error, SuperValidator.URLError.invalidDomain)
         }
     }
     
@@ -404,7 +404,7 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         XCTAssertFalse(isURL)
     }
     
-    internal func testTwitterURLWithInvalidHostname() {
+    internal func testTwitterURLWithInvalidDomain() {
         let url = "www.twitter.co.id/myuser"
         let isURL = self.validator.isURL(url, socialMedia: .twitter)
         XCTAssertFalse(isURL)
@@ -452,14 +452,14 @@ internal final class SocialMediaURLValidatorTests: XCTestCase {
         }
     }
     
-    internal func testTwitterURLWithInvalidHostname_ErrorReason() {
+    internal func testTwitterURLWithInvalidDomain_ErrorReason() {
         let url = "www.twitter.co.id/myuser"
         let result = self.validator.validateURL(url, socialMedia: .twitter)
         switch result {
         case .success:
             XCTFail("Expected to be a failure but got a success")
         case let .failure(error):
-            XCTAssertEqual(error, SuperValidator.URLError.invalidHost)
+            XCTAssertEqual(error, SuperValidator.URLError.invalidDomain)
         }
     }
     

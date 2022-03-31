@@ -14,7 +14,7 @@ extension SuperValidator.Option {
         case youtube
         case twitter
 
-        private var hostWhitelist: SuperValidator.Option.URL.Host {
+        private var domainWhitelist: SuperValidator.Option.URL.Domain {
             switch self {
             case .instagram:
                 return [#"(www\.)?(instagram\.com)"#]
@@ -48,8 +48,8 @@ extension SuperValidator.Option {
                 requireValidProtocol: true,
                 paths: self.paths,
                 allowQueryComponents: false,
-                hostWhitelist: self.hostWhitelist,
-                hostBlacklist: [],
+                domainWhitelist: self.domainWhitelist,
+                domainBlacklist: [],
                 fqdn: .init()
             )
         }
