@@ -61,9 +61,11 @@ extension SuperValidator {
         case notUrl
         case containsWhitespace
         case containsQueryComponents
+        /// protocol not contained in protocols parameter
         case invalidProtocol
         case noProtocol
         case invalidPath
+        /// host not contained in hostWhitelist parameter
         case invalidHost
         case blacklistedHost
         
