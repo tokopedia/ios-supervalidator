@@ -31,6 +31,37 @@ extension SuperValidator.Option {
     }
 }
 
+// MARK: - Error
+extension SuperValidator {
+    public enum EmailErrorType: Error, LocalizedError {
+        case displayNameMoreThanLimit(errorMessage: String)
+        case specificHost(errorMessage: String)
+        case blacklistHost(errorMessage: String)
+        case levelDomainHost(errorMessage: String)
+        case emailInvalid(errorMessage: String)
+        
+        public var errorDescription: String? {
+            switch self {
+            case let .displayNameMoreThanLimit(errorMessage):
+                return NSLocalizedString(errorMessage, comment: "")
+
+            case let .specificHost(errorMessage):
+                return NSLocalizedString(errorMessage, comment: "")
+
+            case let .blacklistHost(errorMessage):
+                return NSLocalizedString(errorMessage, comment: "")
+
+            case let .levelDomainHost(errorMessage):
+                return NSLocalizedString(errorMessage, comment: "")
+            case let .emailInvalid(errorMessage):
+                return NSLocalizedString(errorMessage, comment: "")
+            }
+        }
+    }
+
+}
+
+
 extension SuperValidator {
     internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
         var subStrings = string.components(separatedBy: "@").filter { $0.isNotEmpty }

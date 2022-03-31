@@ -59,10 +59,8 @@ public class SuperValidator {
     public func isEmail(_ string: String, options: Option.Email = .init()) -> Bool {
         let result = checkedEmail(string, options: options)
         switch result {
-        case .success(_):
-           return true
-        case .failure(_):
-            return false
+        case .success: return true
+        case .failure: return false
         }
     }
  
