@@ -58,7 +58,15 @@ public class SuperValidator {
     ///   - options: fqdn options
     /// - Returns: if the domain matches the options, return true
     public func isFQDN(_ string: String, options: Option.FQDN = .init()) -> Bool {
-        return validateFQDN(string, options: options)
+        let result = fqdnValidator(string, options: options)
+        switch result {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
+    public func validateFQDN(_ string: String, options: Option.FQDN = .init()) -> Result<Void, FQDNError> {
+        return fqdnValidator(string, options: options)
     }
     
     // MARK: - Email

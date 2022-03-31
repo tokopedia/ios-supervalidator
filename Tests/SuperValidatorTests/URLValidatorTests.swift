@@ -66,7 +66,7 @@ internal final class URLValidatorTests: XCTestCase {
         allowQueryComponents: false,
         hostWhitelist: [#"(www\.)?(tokopedia\.com)"#],
         hostBlacklist: [],
-        fdqn: .init()
+        fqdn: .init()
     )
     
     internal func testValidURL_UseCustomOptions() {
@@ -114,7 +114,7 @@ internal final class URLValidatorTests: XCTestCase {
             allowQueryComponents: false,
             hostWhitelist: [],
             hostBlacklist: [#"(www\.)?(blacklisted\.com)"#],
-            fdqn: .init()
+            fqdn: .init()
         )
         
         let url = "https://www.tokopedia.com/product/test"
@@ -225,7 +225,7 @@ internal final class URLValidatorTests: XCTestCase {
             allowQueryComponents: false,
             hostWhitelist: [],
             hostBlacklist: [#"(www\.)?(blacklisted\.com)"#],
-            fdqn: .init()
+            fqdn: .init()
         )
 
         let url = "https://www.tokopedia.com/product/test"

@@ -50,7 +50,7 @@ extension SuperValidator.Option {
                 allowQueryComponents: false,
                 hostWhitelist: self.hostWhitelist,
                 hostBlacklist: [],
-                fdqn: .init()
+                fqdn: .init()
             )
         }
     }

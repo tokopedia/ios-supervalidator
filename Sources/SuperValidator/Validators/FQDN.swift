@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Option
+
 extension SuperValidator.Option {
     /// Fully Qualified Domain Name
     public struct FQDN {
@@ -31,8 +33,20 @@ extension SuperValidator.Option {
     }
 }
 
+// MARK: - Error
+
 extension SuperValidator {
-    internal func validateFQDN(_ string: String, options: Option.FQDN = .init()) -> Bool {
+    public enum FQDNError: Error, Equatable {
+        case unqualified
+        case invalidTLD
+        case containsWhitespace
+    }
+}
+
+// MARK: - Validator
+
+extension SuperValidator {
+    internal func fqdnValidator(_ string: String, options: Option.FQDN = .init()) -> Result<Void, FQDNError> {
         var _string = string
 
         // Remove the optional trailing dot before checking validity
@@ -48,15 +62,15 @@ extension SuperValidator {
         let parts = _string.components(separatedBy: ".")
 
         if options.requireTLD {
-            guard let tld = parts[safe: parts.count - 1] else { return false }
+            guard let tld = parts[safe: parts.count - 1] else { return .failure(.invalidTLD) }
             // disallow fqdns without tld
             if parts.count < 2 || !tld.matches("([a-z\u{00a1}-\u{ffff}]{2,}|xn[a-z0-9-]{2,})") {
-                return false
+                return .failure(.invalidTLD)
             }
 
             // disallow space
             if tld.matches("\\s") {
-                return false
+                return .failure(.containsWhitespace)
             }
         }
 
@@ -68,19 +82,19 @@ extension SuperValidator {
             }
 
             if !_part.matches("[a-z\u{00a1}-\u{ffff0}0-9-]+") {
-                return false
+                return .failure(.unqualified)
             }
 
             // disallow parts starting or ending with hyphen
             if let first = _part.first, let last = _part.last {
                 if first == "-" || last == "-" {
-                    return false
+                    return .failure(.unqualified)
                 }
             } else {
-                return false
+                return .failure(.unqualified)
             }
         }
 
-        return true
+        return .success(())
     }
 }

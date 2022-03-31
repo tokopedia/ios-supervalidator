@@ -30,7 +30,7 @@ extension SuperValidator.Option {
         /// hostname can't be the same as one of blacklisted host
         public let hostBlacklist: Host
         /// Fully Qualified Domain Name`
-        public let fdqn: FQDN
+        public let fqdn: FQDN
 
         public init(
             protocols: Protocols = ["https", "http", "ftp"],
@@ -40,7 +40,7 @@ extension SuperValidator.Option {
             allowQueryComponents: Bool = true,
             hostWhitelist: Host = [],
             hostBlacklist: Host = [],
-            fdqn: FQDN = .init()
+            fqdn: FQDN = .init()
         ) {
             self.protocols = protocols
             self.requireProtocol = requireProtocol
@@ -49,7 +49,7 @@ extension SuperValidator.Option {
             self.allowQueryComponents = allowQueryComponents
             self.hostWhitelist = hostWhitelist
             self.hostBlacklist = hostBlacklist
-            self.fdqn = fdqn
+            self.fqdn = fqdn
         }
     }
 }
@@ -57,7 +57,7 @@ extension SuperValidator.Option {
 // MARK: - Error
 
 extension SuperValidator {
-    public enum URLError: Error, LocalizedError {
+    public enum URLError: Error, LocalizedError, Equatable {
         case notUrl
         case containsWhitespace
         case containsQueryComponents
@@ -68,13 +68,15 @@ extension SuperValidator {
         /// host not contained in hostWhitelist parameter
         case invalidHost
         case blacklistedHost
+        case fqdn(FQDNError)
         
         public var errorDescription: String? {
             switch self {
             case .notUrl:
                 return "Please enter an url"
             case .containsWhitespace, .containsQueryComponents, .invalidProtocol,
-                 .noProtocol, .invalidPath, .invalidHost, .blacklistedHost:
+                 .noProtocol, .invalidPath, .invalidHost, .blacklistedHost,
+                 .fqdn:
                 return nil
             }
         }
@@ -142,10 +144,14 @@ extension SuperValidator {
         if options.hostBlacklist.isNotEmpty, checkHost(host: hostname, matches: options.hostBlacklist) {
             return .failure(.blacklistedHost)
         }
-
-        if !isFQDN(hostname, options: options.fdqn) {
-            // TODO: Create FQDN Error Reasons
-            return .failure(.notUrl)
+        
+        let fqdnResult = validateFQDN(hostname, options: options.fqdn)
+        if case let .failure(error) = fqdnResult {
+            if error == .containsWhitespace {
+                return .failure(.containsWhitespace)
+            } else {
+                return .failure(.fqdn(error))
+            }
         }
 
         return .success(())
