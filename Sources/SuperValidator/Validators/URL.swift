@@ -68,7 +68,7 @@ extension SuperValidator {
         /// domain not contained in domainWhitelist parameter
         case invalidDomain
         case blacklistedDomain
-        case fqdn(FQDNError)
+        case invalidFQDN
         
         public var errorDescription: String? {
             switch self {
@@ -76,7 +76,7 @@ extension SuperValidator {
                 return "Please enter an url"
             case .containsWhitespace, .containsQueryComponents, .invalidProtocol,
                  .noProtocol, .invalidPath, .invalidDomain, .blacklistedDomain,
-                 .fqdn:
+                 .invalidFQDN:
                 return nil
             }
         }
@@ -145,13 +145,8 @@ extension SuperValidator {
             return .failure(.blacklistedDomain)
         }
         
-        let fqdnResult = validateFQDN(domain, options: options.fqdn)
-        if case let .failure(error) = fqdnResult {
-            if error == .containsWhitespace {
-                return .failure(.containsWhitespace)
-            } else {
-                return .failure(.fqdn(error))
-            }
+        if !isFQDN(domain, options: options.fqdn) {
+            return .failure(.invalidFQDN)
         }
 
         return .success(())

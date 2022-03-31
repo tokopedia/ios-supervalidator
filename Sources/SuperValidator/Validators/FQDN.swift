@@ -7,8 +7,6 @@
 
 import Foundation
 
-// MARK: - Option
-
 extension SuperValidator.Option {
     /// Fully Qualified Domain Name
     public struct FQDN {
@@ -33,20 +31,8 @@ extension SuperValidator.Option {
     }
 }
 
-// MARK: - Error
-
 extension SuperValidator {
-    public enum FQDNError: Error, Equatable {
-        case unqualified
-        case invalidTLD
-        case containsWhitespace
-    }
-}
-
-// MARK: - Validator
-
-extension SuperValidator {
-    internal func fqdnValidator(_ string: String, options: Option.FQDN = .init()) -> Result<Void, FQDNError> {
+    internal func fqdnValidator(_ string: String, options: Option.FQDN = .init()) -> Bool {
         var _string = string
 
         // Remove the optional trailing dot before checking validity
@@ -62,15 +48,15 @@ extension SuperValidator {
         let parts = _string.components(separatedBy: ".")
 
         if options.requireTLD {
-            guard let tld = parts[safe: parts.count - 1] else { return .failure(.invalidTLD) }
+            guard let tld = parts[safe: parts.count - 1] else { return false }
             // disallow fqdns without tld
             if parts.count < 2 || !tld.matches("([a-z\u{00a1}-\u{ffff}]{2,}|xn[a-z0-9-]{2,})") {
-                return .failure(.invalidTLD)
+                return false
             }
 
             // disallow space
             if tld.matches("\\s") {
-                return .failure(.containsWhitespace)
+                return false
             }
         }
 
@@ -82,19 +68,19 @@ extension SuperValidator {
             }
 
             if !_part.matches("[a-z\u{00a1}-\u{ffff0}0-9-]+") {
-                return .failure(.unqualified)
+                return false
             }
 
             // disallow parts starting or ending with hyphen
             if let first = _part.first, let last = _part.last {
                 if first == "-" || last == "-" {
-                    return .failure(.unqualified)
+                    return false
                 }
             } else {
-                return .failure(.unqualified)
+                return false
             }
         }
 
-        return .success(())
+        return true
     }
 }
