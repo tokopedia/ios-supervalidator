@@ -22,7 +22,15 @@ public class SuperValidator {
     ///   - options: url options such as valid protocols, hostname, path.
     /// - Returns: if the url matches the options, return true
     public func isURL(_ string: String, options: Option.URL = .init()) -> Bool {
-        return validateURL(string, options: options)
+        let result = urlValidator(string, options: options)
+        switch result {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
+    public func validateURL(_ string: String, options: Option.URL = .init()) -> Result<Void, URLError> {
+        return urlValidator(string, options: options)
     }
 
     /// validate url with social media setting
@@ -31,7 +39,15 @@ public class SuperValidator {
     ///   - socialMedia:enum of social media url option
     /// - Returns: if the url matches the social media url options, return true
     public func isURL(_ string: String, socialMedia: Option.SocialMediaURL) -> Bool {
-        return validateURL(string, options: socialMedia.options)
+        let result = urlValidator(string, options: socialMedia.options)
+        switch result {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
+    public func validateURL(_ string: String, socialMedia: Option.SocialMediaURL) -> Result<Void, URLError> {
+        return urlValidator(string, options: socialMedia.options)
     }
 
     // MARK: - FQDN

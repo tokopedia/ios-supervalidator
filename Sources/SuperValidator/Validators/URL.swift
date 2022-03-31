@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - Option
+
 extension SuperValidator.Option {
     /// URL Options
     public struct URL {
@@ -52,13 +54,39 @@ extension SuperValidator.Option {
     }
 }
 
+// MARK: - Error
+
 extension SuperValidator {
-    internal func validateURL(_ string: String, options: Option.URL) -> Bool {
-        guard string.isNotEmpty, !string.containsWhitespace else { return false }
+    public enum URLError: Error, LocalizedError {
+        case notUrl
+        case containsQueryComponents
+        case invalidProtocol
+        case noProtocol
+        case invalidPath
+        case invalidHost
+        case blacklistedHost
+        
+        public var errorDescription: String? {
+            switch self {
+            case .notUrl:
+                return "Please enter an url"
+            case .containsQueryComponents, .invalidProtocol, .noProtocol,
+                 .invalidPath, .invalidHost, .blacklistedHost:
+                return nil
+            }
+        }
+    }
+}
+
+// MARK: - Validator
+
+extension SuperValidator {
+    internal func urlValidator(_ string: String, options: Option.URL) -> Result<Void, URLError> {
+        guard string.isNotEmpty, !string.containsWhitespace else { return .failure(.notUrl) }
         var url = string
 
         if !options.allowQueryComponents, url.contains("?") || url.contains("&") {
-            return false
+            return .failure(.containsQueryComponents)
         }
 
         // example url https://en.wikipedia.org/wiki/Internet?page=1&p=a#Terminology
@@ -77,14 +105,14 @@ extension SuperValidator {
         if parts.count > 1 {
             if let _protocol = parts[safe: 0] {
                 if options.requireValidProtocol, !options.protocols.contains(_protocol) {
-                    return false
+                    return .failure(.invalidProtocol)
                 }
             }
         } else if options.requireProtocol {
-            return false
+            return .failure(.noProtocol)
         }
 
-        if url.isEmpty { return false }
+        if url.isEmpty { return .failure(.notUrl) }
         url = parts.removeLast()
 
         parts = url.components(separatedBy: "/")
@@ -92,28 +120,29 @@ extension SuperValidator {
         
         let pathOptions = options.paths
         if pathOptions.isNotEmpty, !checkPath(parts, options: pathOptions) {
-            return false
+            return .failure(.invalidPath)
         }
 
         if url.isEmpty {
-            return false
+            return .failure(.notUrl)
         }
 
         let hostname = url
 
         if options.hostWhitelist.isNotEmpty, !checkHost(host: hostname, matches: options.hostWhitelist) {
-            return false
+            return .failure(.invalidHost)
         }
 
         if options.hostBlacklist.isNotEmpty, checkHost(host: hostname, matches: options.hostBlacklist) {
-            return false
+            return .failure(.blacklistedHost)
         }
 
         if !isFQDN(hostname, options: options.fdqn) {
-            return false
+            // TODO: Create FQDN Error Reasons
+            return .failure(.notUrl)
         }
 
-        return true
+        return .success(())
     }
     
     // MARK: - Check Host
