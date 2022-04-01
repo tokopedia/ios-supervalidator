@@ -53,7 +53,7 @@ extension SuperValidator {
 }
 
 extension SuperValidator {
-    internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
+    internal func emailValidator(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
         var subStrings = string.components(separatedBy: "@").filter { $0.isNotEmpty }
         
         guard string.matches(Regex.emailStrict) else {
