@@ -34,44 +34,35 @@ extension SuperValidator.Option {
 // MARK: - Error
 extension SuperValidator {
     public enum EmailErrorType: Error, LocalizedError {
-        case displayNameMoreThanLimit(errorMessage: String)
-        case specificHost(errorMessage: String)
-        case blacklistHost(errorMessage: String)
-        case levelDomainHost(errorMessage: String)
-        case emailInvalid(errorMessage: String)
+        case displayNameMoreThanLimit
+        case specificHost
+        case blacklistHost
+        case levelDomainHost
+        case emailInvalid
         
         public var errorDescription: String? {
             switch self {
-            case let .displayNameMoreThanLimit(errorMessage):
-                return NSLocalizedString(errorMessage, comment: "")
-
-            case let .specificHost(errorMessage):
-                return NSLocalizedString(errorMessage, comment: "")
-
-            case let .blacklistHost(errorMessage):
-                return NSLocalizedString(errorMessage, comment: "")
-
-            case let .levelDomainHost(errorMessage):
-                return NSLocalizedString(errorMessage, comment: "")
-            case let .emailInvalid(errorMessage):
-                return NSLocalizedString(errorMessage, comment: "")
+            case .displayNameMoreThanLimit, .specificHost, .levelDomainHost, .blacklistHost :
+                return nil
+            case .emailInvalid:
+                return "Invalid Email"
             }
         }
     }
 
 }
 
-
 extension SuperValidator {
     internal func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
         var subStrings = string.components(separatedBy: "@").filter { $0.isNotEmpty }
         
         guard string.matches(Regex.emailStrict) else {
-            return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
-
+            return .failure(EmailErrorType.emailInvalid)
+        }
+        
         // The expected is 2 because there are name and domain
         if subStrings.count < 2 {
-            return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
+            return .failure(EmailErrorType.emailInvalid)
         }
         
         // Default Match
@@ -83,46 +74,38 @@ extension SuperValidator {
             let tld = domain.components(separatedBy: ".")[safe: 1]
             
             if domainParts.count < 2 {
-                 return .failure(EmailErrorType.emailInvalid(errorMessage: "Invalid Email"))
+                 return .failure(EmailErrorType.emailInvalid)
             }
             
             // Set Personal name Length
             if options.lengthLimitPersonalName != 0 {
                 if personalName.count > options.lengthLimitPersonalName {
-                        return .failure(.displayNameMoreThanLimit(errorMessage: "Personal name must less than \(options.lengthLimitPersonalName)"))
+                        return .failure(.displayNameMoreThanLimit)
                 }
             }
 
             // Specific Host
-            if options.specificHostList.isNotEmpty{
-                var isFound = false
-                    if let hostName = hostName {
-                        for host in options.specificHostList {
-                            if host == hostName {
-                                isFound = true
-                                break
-                            }
-                        }
-                    }
-                if isFound == false {
-                    return .failure(.specificHost(errorMessage: "Host is not allowed"))
+            if options.specificHostList.isNotEmpty {
+                if !options.specificHostList.contains(hostName ?? "") {
+                    return .failure(.specificHost)
                 }
             }
+        
             
             // Blacklist
             if options.specificHostBlacklist.isNotEmpty, let _ = options.specificHostBlacklist.first(where: {
                 $0 == hostName
             }) {
-                return .failure(.blacklistHost(errorMessage: "Your host is blacklisted"))
+                return .failure(.blacklistHost)
             }
       
             // Top Level Domain
-            if options.specificDomainList.isNotEmpty, let _ = options.specificDomainList.first(where: {
-                $0 == tld
-            }) {
-                return .failure(.levelDomainHost(errorMessage: "Your domain is not allowed"))
+            if options.specificDomainList.isNotEmpty {
+                if !options.specificDomainList.contains(tld ?? "") {
+                    return .failure(.levelDomainHost)
+                }
             }
-        }
+       
 
         return .success(())
     }
