@@ -46,16 +46,22 @@ public class SuperValidator {
     }
     
     // MARK: - Email
-
+    
+    /// Use this function to custom the error resposne 
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: domain in String
+    ///    - options: email options
+    /// - Returns: the response either .success(()) or let .failure(let error)
+    public func checkedEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
+        return emailValidator(string, options: options)
+    }
+    
     /// Custom Email Validation
     /// - Parameters:
     ///    - string: domain in String
     ///    - options: email options
     /// - Returns: if the domain matches the options, return true
-    public func checkedEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
-        return emailValidator(string, options: options)
-    }
-    
     public func isEmail(_ string: String, options: Option.Email = .init()) -> Bool {
         let result = checkedEmail(string, options: options)
         switch result {
