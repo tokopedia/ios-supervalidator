@@ -11,19 +11,19 @@ extension SuperValidator.Option {
     /// Email
     public struct Email {
         /// Personal name
-        public let lengthLimitPersonalName: Int
+        public let lengthLimitLocalPart: Int
         /// Domain
         public let specificTLDList: [String]
         public let specificDomainNameBlacklist: [String]
         public let specificDomainNameList: [String]
 
         public init(
-            lengthLimitPersonalName: Int = 0,
+            lengthLimitLocalPart: Int = 0,
             specificTLDList: [String] = [],
             specificDomainNameBlacklist: [String] = [],
             specificDomainNameList: [String] = []
         ) {
-            self.lengthLimitPersonalName = lengthLimitPersonalName
+            self.lengthLimitLocalPart = lengthLimitLocalPart
             self.specificTLDList = specificTLDList
             self.specificDomainNameBlacklist = specificDomainNameBlacklist
             self.specificDomainNameList = specificDomainNameList
@@ -78,9 +78,11 @@ extension SuperValidator {
                  return .failure(EmailErrorType.emailInvalid)
             }
             
-            // Set Personal name Length
-            if options.lengthLimitPersonalName != 0 {
-                if personalName.count > options.lengthLimitPersonalName {
+            // Set Local Part Length
+            // ex : teddy@example.com
+            // Local Part : teddy
+            if options.lengthLimitLocalPart != 0 {
+                if personalName.count > options.lengthLimitLocalPart {
                         return .failure(.displayNameMoreThanLimit)
                 }
             }
