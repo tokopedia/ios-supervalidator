@@ -43,7 +43,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithSpecificHostName() {
-        let isEmail = self.validator.validateEmail("teddy@test.com", options: SuperValidator.Option.Email(specificDomainHostList: ["test", "tost", "tist"]))
+        let isEmail = self.validator.validateEmail("teddy@test.com", options: SuperValidator.Option.Email(specificDomainNameList: ["test", "tost", "tist"]))
 
         switch isEmail {
         case  .success:
@@ -55,7 +55,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithNotBlackListedHost() {
-        let isEmail = self.validator.validateEmail("teddy@test.com", options: SuperValidator.Option.Email(specificDomainHostBlacklist: ["tist"]))
+        let isEmail = self.validator.validateEmail("teddy@test.com", options: SuperValidator.Option.Email(specificDomainNameBlacklist: ["tist"]))
 
         switch isEmail {
         case  .success:
@@ -99,7 +99,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithInvalidHostName() {
-        let isEmail = self.validator.validateEmail("teddy@tast.com", options: SuperValidator.Option.Email(specificDomainHostList: ["test", "tist", "tost"]))
+        let isEmail = self.validator.validateEmail("teddy@tast.com", options: SuperValidator.Option.Email(specificDomainNameList: ["test", "tist", "tost"]))
         switch isEmail {
         case  .success:
             XCTFail("Expected to be a failure but got a success")
@@ -109,7 +109,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithHostBlacklisted() {
-        let isEmail = self.validator.validateEmail("teddy@tast.com", options: SuperValidator.Option.Email(specificDomainHostBlacklist: ["tast"]))
+        let isEmail = self.validator.validateEmail("teddy@tast.com", options: SuperValidator.Option.Email(specificDomainNameBlacklist: ["tast"]))
         switch isEmail {
         case  .success:
             XCTFail("Expected to be a failure but got a success")
@@ -130,7 +130,7 @@ internal final class EmailValidatorTests: XCTestCase {
     
     // Combine the options
     internal func testValidEmailWithAllOptionsAndInvalidLength() {
-        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificTLDList: ["com", "id"], specificDomainHostBlacklist: ["tast"], specificDomainHostList: ["test", "tist", "tust"])
+        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificTLDList: ["com", "id"], specificDomainNameBlacklist: ["tast"], specificDomainNameList: ["test", "tist", "tust"])
         let isEmail = SuperValidator.shared.validateEmail("teddyyyasad@test.com", options: emailOptionAll)
         switch isEmail {
         case .success:
@@ -141,7 +141,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithAllOptionsAndInvalidHostName() {
-        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificTLDList: ["com", "id"], specificDomainHostBlacklist: ["tast"], specificDomainHostList: ["test", "tist", "tust"])
+        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificTLDList: ["com", "id"], specificDomainNameBlacklist: ["tast"], specificDomainNameList: ["test", "tist", "tust"])
         let isEmail = SuperValidator.shared.validateEmail("teddyd@tost.com", options: emailOptionAll)
         switch isEmail {
         case  .success:
@@ -152,7 +152,7 @@ internal final class EmailValidatorTests: XCTestCase {
     }
     
     internal func testValidEmailWithAllOptionsAndInvalidTLD() {
-        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificTLDList: ["com", "id"], specificDomainHostBlacklist: ["tast"], specificDomainHostList: ["test", "tist", "tust"])
+        let emailOptionAll = SuperValidator.Option.Email(lengthLimitPersonalName: 8, specificTLDList: ["com", "id"], specificDomainNameBlacklist: ["tast"], specificDomainNameList: ["test", "tist", "tust"])
         let isEmail = SuperValidator.shared.validateEmail("teddyd@test.us", options: emailOptionAll)
         switch isEmail {
         case .success:

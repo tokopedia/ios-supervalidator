@@ -14,19 +14,19 @@ extension SuperValidator.Option {
         public let lengthLimitPersonalName: Int
         /// Domain
         public let specificTLDList: [String]
-        public let specificDomainHostBlacklist: [String]
-        public let specificDomainHostList: [String]
+        public let specificDomainNameBlacklist: [String]
+        public let specificDomainNameList: [String]
 
         public init(
             lengthLimitPersonalName: Int = 0,
             specificTLDList: [String] = [],
-            specificDomainHostBlacklist: [String] = [],
-            specificDomainHostList: [String] = []
+            specificDomainNameBlacklist: [String] = [],
+            specificDomainNameList: [String] = []
         ) {
             self.lengthLimitPersonalName = lengthLimitPersonalName
             self.specificTLDList = specificTLDList
-            self.specificDomainHostBlacklist = specificDomainHostBlacklist
-            self.specificDomainHostList = specificDomainHostList
+            self.specificDomainNameBlacklist = specificDomainNameBlacklist
+            self.specificDomainNameList = specificDomainNameList
         }
     }
 }
@@ -88,8 +88,8 @@ extension SuperValidator {
             // Specific Domain Host
             // ex : teddy@example.com
             // Domain host : example
-            if options.specificDomainHostList.isNotEmpty {
-                if !options.specificDomainHostList.contains(hostName ?? "") {
+            if options.specificDomainNameList.isNotEmpty {
+                if !options.specificDomainNameList.contains(hostName ?? "") {
                     return .failure(.specificHost)
                 }
             }
@@ -98,7 +98,7 @@ extension SuperValidator {
             // Blacklist Domain Host
             // ex : teddy@example.com
             // Domain host : example
-            if options.specificDomainHostBlacklist.isNotEmpty, let _ = options.specificDomainHostBlacklist.first(where: {
+            if options.specificDomainNameBlacklist.isNotEmpty, let _ = options.specificDomainNameBlacklist.first(where: {
                 $0 == hostName
             }) {
                 return .failure(.blacklistHost)
