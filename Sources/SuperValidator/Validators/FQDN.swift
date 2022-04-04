@@ -16,7 +16,12 @@ extension SuperValidator.Option {
         public let allowTrailingDot: Bool
         /// Wildcard DNS record
         public let allowWildcard: Bool
-
+        
+        /// - Parameters:
+        ///    - requireTLD: Top Level Domain
+        ///    - allowUnderscores
+        ///    - allowTrailingDot
+        ///    - allowWildcard:Wildcard DNS record
         public init(
             requireTLD: Bool = true,
             allowUnderscores: Bool = false,

@@ -246,4 +246,15 @@ internal final class URLValidatorTests: XCTestCase {
             XCTAssertEqual(error, SuperValidator.URLError.blacklistedDomain)
         }
     }
+    
+    internal func testUsingApplink_ErrorReason() {
+        let url = "tokopedia://home"
+        let result = self.validator.validateURL(url)
+        switch result {
+        case .success:
+            XCTFail("Expected to be a failure but got a success")
+        case let .failure(error):
+            XCTAssertEqual(error, SuperValidator.URLError.notUrl)
+        }
+    }
 }

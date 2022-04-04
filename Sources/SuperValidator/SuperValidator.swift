@@ -19,7 +19,7 @@ public class SuperValidator {
     /// validate url with custom options
     /// - Parameters:
     ///   - string: url string
-    ///   - options: url options such as valid protocols, domain, path.
+    ///   - options: url options such as protocols, domain, path.
     /// - Returns: if the url matches the options, return true
     public func isURL(_ string: String, options: Option.URL = .init()) -> Bool {
         let result = urlValidator(string, options: options)
@@ -28,7 +28,12 @@ public class SuperValidator {
         case .failure: return false
         }
     }
-    
+
+    /// validate url with custom options
+    /// - Parameters:
+    ///   - string: url string
+    ///   - options: url options such as protocols, domain, path.
+    /// - Returns: a success void or failure with error enum
     public func validateURL(_ string: String, options: Option.URL = .init()) -> Result<Void, URLError> {
         return urlValidator(string, options: options)
     }
@@ -46,6 +51,11 @@ public class SuperValidator {
         }
     }
     
+    /// validate url with social media setting
+    /// - Parameters:
+    ///   - string: url string
+    ///   - socialMedia:enum of social media url option
+    /// - Returns: a success void or failure with error enum
     public func validateURL(_ string: String, socialMedia: Option.SocialMediaURL) -> Result<Void, URLError> {
         return urlValidator(string, options: socialMedia.options)
     }

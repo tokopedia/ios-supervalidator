@@ -15,15 +15,15 @@ extension SuperValidator.Option {
         public typealias Protocols = [String]
         public typealias Path = [String]
         public typealias Domain = [String]
-        /// valid protocol ( e.g https. http, ftp )
+        /// valid protocol [https. http, ftp]
         public let protocols: Protocols
-        /// if true, url must have protocol
+        /// if set to true, url must have protocol
         public let requireProtocol: Bool
-        /// protocol must be the same as one of valid protocol listed in protocols constant
+        /// protocol must be the same as one of the valid protocol listed in protocols parameter
         public let requireValidProtocol: Bool
-        /// path ( e.g /user/edit/{userID} )
+        /// url path ( e.g /user/edit/{userID} )
         public let paths: Path
-        /// query ( e.g page=1&sort=asc )
+        /// if set to true, allow query components ( e.g page=1&sort=asc )
         public let allowQueryComponents: Bool
         /// domain must be the same as one of whitelisted domain
         public let domainWhitelist: Domain
@@ -31,7 +31,16 @@ extension SuperValidator.Option {
         public let domainBlacklist: Domain
         /// Fully Qualified Domain Name`
         public let fqdn: FQDN
-
+        
+        /// - Parameters:
+        ///    - protocols: valid protocol [https. http, ftp]
+        ///    - requireProtocol: if set to true, url must have protocol
+        ///    - requireValidProtocol: protocol must be the same as one of the valid protocol listed in protocols parameter
+        ///    - paths: url path ( e.g /user/edit/{userID} )
+        ///    - allowQueryComponents: if set to true, allow query components ( e.g page=1&sort=asc )
+        ///    - domainWhitelist: domain must be the same as one of whitelisted domain
+        ///    - domainBlacklist: domain can't be the same as one of blacklisted domain
+        ///    - fqdn: Fully Qualified Domain Name
         public init(
             protocols: Protocols = ["https", "http", "ftp"],
             requireProtocol: Bool = false,
@@ -77,7 +86,7 @@ extension SuperValidator {
             case .containsWhitespace, .containsQueryComponents, .invalidProtocol,
                  .noProtocol, .invalidPath, .invalidDomain, .blacklistedDomain,
                  .invalidFQDN:
-                return nil
+                return "Please enter a valid url"
             }
         }
     }
