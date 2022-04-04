@@ -15,6 +15,6 @@ extension String {
 }
 
 internal enum Regex {
-    internal static let emailStrict = #"[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}"#
+    internal static let emailStrict = "[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}"
     internal static let emailLax = #".+@([A-Za-z0-9]+\\.)+[A-Za-z]{2}[A-Za-z]*"#
 }

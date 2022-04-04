@@ -44,4 +44,31 @@ public class SuperValidator {
     public func isFQDN(_ string: String, options: Option.FQDN = .init()) -> Bool {
         return validateFQDN(string, options: options)
     }
+    
+    // MARK: - Email
+    
+    /// Use this function to custom the error resposne 
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: domain in String
+    ///    - options: email options
+    /// - Returns: the response either .success(()) or let .failure(let error)
+    public func validateEmail(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailError> {
+        return emailValidator(string, options: options)
+    }
+    
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: domain in String
+    ///    - options: email options
+    /// - Returns: if the domain matches the options, return true
+    public func isEmail(_ string: String, options: Option.Email = .init()) -> Bool {
+        let result = validateEmail(string, options: options)
+        switch result {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+ 
 }
+
