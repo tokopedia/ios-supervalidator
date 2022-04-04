@@ -19,7 +19,7 @@ extension SuperValidator.Option {
             case .instagram:
                 return [#"(www\.)?(instagram\.com)"#]
             case .tiktok:
-                return [#"(vt\.tiktok\.com)"#]
+                return [#"(vt\.)?(tiktok\.com)"#]
             case .youtube:
                 return [#"(www\.)?(youtube\.com)"#]
             case .twitter:
@@ -27,12 +27,17 @@ extension SuperValidator.Option {
             }
         }
 
-        private var path: SuperValidator.Option.URL.Path {
+        private var paths: SuperValidator.Option.URL.Path {
             switch self {
             case .instagram, .tiktok, .twitter:
-                return "{username}"
+                return ["{username}"]
             case .youtube:
-                return "user/{username}"
+                return [
+                    "user/{username}",
+                    "c/{username}",
+                    "id/{username}",
+                    "channel/{username}"
+                ]
             }
         }
 
@@ -41,7 +46,7 @@ extension SuperValidator.Option {
                 protocols: ["https", "http"],
                 requireProtocol: false,
                 requireValidProtocol: true,
-                path: self.path,
+                paths: self.paths,
                 allowQueryComponents: false,
                 hostWhitelist: self.hostWhitelist,
                 hostBlacklist: [],
