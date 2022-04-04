@@ -36,4 +36,27 @@ extension String {
     internal func removeCharacter(char: String) -> String {
         return replacingOccurrences(of: char, with: "")
     }
+    
+    internal func stringBefore(_ delimiter: Character) -> String {
+        if let index = firstIndex(of: delimiter) {
+            return String(prefix(upTo: index))
+        } else {
+            return ""
+        }
+    }
+    
+}
+
+// Phone Validator
+extension String {
+    internal func getCountryCodeNANP() -> String {
+        var countryCode = self.stringBefore(")")
+        countryCode.removeFirst()
+        return countryCode
+    }
+    
+    internal func getCountryCodeEPP() -> String {
+        let countryCode = self.stringBefore(".")
+        return countryCode
+    }
 }

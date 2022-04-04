@@ -52,7 +52,7 @@ public class SuperValidator {
     ///   - string: phone in string
     ///   - options: phone options
     /// - Returns: the response either .success(()) or let .failure(let error)
-    public func validatePhone(_ string: String, options: Option.Phone = .init()) -> Result<Bool, ErrorType> {
+    public func validatePhone(_ string: String, options: Option.Phone = .init()) -> Result<Void, PhoneError> {
         return phoneValidator(string, options: options)
     }
     

@@ -17,30 +17,30 @@ extension SuperValidator.Option {
     /// Phone
     public struct Phone {
         public let phoneFormatType: PhoneFormat
+        public let specifiedCountryCode: [String]
 
         public init(
-            phoneFormatType: PhoneFormat = .international
+            phoneFormatType: PhoneFormat = .international,
+            specifiedCountryCode: [String] = []
         ) {
             self.phoneFormatType = phoneFormatType
+            self.specifiedCountryCode = specifiedCountryCode
         }
     }
 }
 
 // MARK: - Error
 extension SuperValidator {
-    public enum PhoneErrorType: Error, LocalizedError {
-        case displayNameMoreThanLimit
-        case specificHost
-        case blacklistHost
-        case levelDomainHost
-        case emailInvalid
+    public enum PhoneError: Error, LocalizedError {
+        case invalidCountryCode
+        case invalidPhone
         
         public var errorDescription: String? {
             switch self {
-            case .displayNameMoreThanLimit, .specificHost, .levelDomainHost, .blacklistHost :
+            case .invalidCountryCode:
                 return nil
-            case .emailInvalid:
-                return "Invalid Email"
+            case .invalidPhone:
+                return "Invalid Phone number"
             }
         }
     }
@@ -48,27 +48,44 @@ extension SuperValidator {
 
 
 extension SuperValidator {
-    internal func phoneValidator(_ string: String, options: Option.Phone = .init()) -> Result<Bool, ErrorType> {
-        let _string = string
+    internal func phoneValidator(_ string: String, options: Option.Phone = .init()) -> Result<Void, PhoneError> {
         switch options.phoneFormatType {
         case .international:
-            if _string.matchesRegex(Regex.internationalPhoneFormat) {
-                return .success(true)
-            } else {
-                return .failure(ErrorType.phoneInvalid(errorMessage: "invalid international phone format"))
+            guard string.matches(Regex.internationalPhoneFormat) else {
+                return .failure(PhoneError.invalidPhone)
             }
+            
+            let phoneCode = string.prefix(3)
+            if options.specifiedCountryCode.isNotEmpty {
+                if !options.specifiedCountryCode.contains(String(phoneCode)) {
+                    return .failure(.invalidCountryCode)
+                }
+            }
+            
+            
         case .nanp:
-            if _string.matchesRegex(Regex.NANPPhoneFormat) {
-                return .success(true)
-            } else {
-                return .failure(ErrorType.phoneInvalid(errorMessage: "invalid nanp phone format"))
+            guard string.matches(Regex.NANPPhoneFormat) else {
+                return .failure(PhoneError.invalidPhone)
             }
+            
+            let countryCode = string.getCountryCodeNANP()
+            if options.specifiedCountryCode.isNotEmpty {
+                if !options.specifiedCountryCode.contains(countryCode) {
+                    return .failure(.invalidCountryCode)
+                }
+            }
+        
         case .epp:
-            if _string.matchesRegex(Regex.EPPPhoneFormat) {
-                return .success(true)
-            } else {
-                return .failure(ErrorType.phoneInvalid(errorMessage: "invalid epp phone format"))
+            guard string.matches(Regex.EPPPhoneFormat) else {
+                return .failure(PhoneError.invalidPhone)
+            }
+            let countryCode = string.getCountryCodeEPP()
+            if options.specifiedCountryCode.isNotEmpty {
+                if !options.specifiedCountryCode.contains(countryCode) {
+                    return .failure(.invalidCountryCode)
+                }
             }
         }
+        return .success(())
     }
 }

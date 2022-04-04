@@ -15,12 +15,13 @@ internal final class PhoneValidatorTests: XCTestCase {
     // Valid
     internal func testValidPhoneNumberInternational() {
         let phoneInternational = "+628916123123"
-        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneFormatType: .international))
+        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneFormatType: .international, specifiedCountryCode: ["+62"]))
         switch isValidInternational {
-            case .success(let value):
-                XCTAssertTrue(value)
+        case .success:
+                XCTAssertTrue(true)
                 break
-            case .failure(_):
+            case let .failure(error):
+            XCTFail("Expected to be a success but got a failure with \(error)")
                 break
         }
        
@@ -28,24 +29,26 @@ internal final class PhoneValidatorTests: XCTestCase {
     
     internal func testValidPhoneNumberNANP() {
         let phoneNANP = "(415) 555 0132"
-        let isValidNANP = validator.validatePhone(phoneNANP, options: .init(phoneFormatType: .nanp))
+        let isValidNANP = validator.validatePhone(phoneNANP, options: .init(phoneFormatType: .nanp, specifiedCountryCode: ["415"]))
         switch isValidNANP {
-            case .success(let value):
-                XCTAssertTrue(value)
+            case .success:
+                XCTAssertTrue(true)
                 break
-            case .failure(_):
-                break
+            case let .failure(error):
+                XCTFail("Expected to be a success but got a failure with \(error)")
+            break
         }
     }
     
     internal func testValidPhoneNumberEPP() {
         let phoneEPP = "+44.2087712924"
-        let isValidEPP = validator.validatePhone(phoneEPP, options: .init(phoneFormatType: .epp))
+        let isValidEPP = validator.validatePhone(phoneEPP, options: .init(phoneFormatType: .epp, specifiedCountryCode: ["+44"]))
         switch isValidEPP {
-            case .success(let value):
-                XCTAssertTrue(value)
+            case .success:
+            XCTAssertTrue(true)
                 break
-            case .failure(_):
+            case let .failure(error):
+            XCTFail("Expected to be a success but got a failure with \(error)")
                 break
         }
     }
@@ -55,11 +58,11 @@ internal final class PhoneValidatorTests: XCTestCase {
         let phoneInternational = "+6212312311238918989898989889"
         let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneFormatType: .international))
         switch isValidInternational {
-            case .success(let value):
-                XCTAssertTrue(value)
+            case .success:
+                XCTAssertTrue(true)
                 break
             case .failure(let error):
-            XCTAssertEqual(error.localizedDescription, "invalid international phone format")
+            XCTAssertEqual(error, SuperValidator.PhoneError.invalidPhone)
                 break
         }
     }
@@ -68,11 +71,11 @@ internal final class PhoneValidatorTests: XCTestCase {
         let phoneNANP = "(415) 555 0132 1231"
         let isValidNANP = validator.validatePhone(phoneNANP, options: .init(phoneFormatType: .nanp))
         switch isValidNANP {
-            case .success(let value):
-                XCTAssertTrue(value)
+            case .success:
+                XCTAssertTrue(true)
                 break
             case .failure(let error):
-            XCTAssertEqual(error.localizedDescription, "invalid nanp phone format")
+            XCTAssertEqual(error, SuperValidator.PhoneError.invalidPhone)
                 break
         }
     }
@@ -81,11 +84,11 @@ internal final class PhoneValidatorTests: XCTestCase {
         let phoneEPP = "+4423.2087712924"
         let isValidEPP = validator.validatePhone(phoneEPP, options: .init(phoneFormatType: .epp))
         switch isValidEPP {
-            case .success(let value):
-                XCTAssertTrue(value)
+            case .success:
+                XCTAssertTrue(true)
                 break
             case .failure(let error):
-            XCTAssertEqual(error.localizedDescription, "invalid epp phone format")
+            XCTAssertEqual(error, SuperValidator.PhoneError.invalidPhone)
                 break
         }
     }
