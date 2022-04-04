@@ -13,20 +13,20 @@ extension SuperValidator.Option {
         /// Personal name
         public let lengthLimitPersonalName: Int
         /// Domain
-        public let specificDomainList: [String]
-        public let specificHostBlacklist: [String]
-        public let specificHostList: [String]
+        public let specificTLDList: [String]
+        public let specificDomainHostBlacklist: [String]
+        public let specificDomainHostList: [String]
 
         public init(
             lengthLimitPersonalName: Int = 0,
-            specificDomainList: [String] = [],
-            hostBlacklist: [String] = [],
-            specificHost: [String] = []
+            specificTLDList: [String] = [],
+            specificDomainHostBlacklist: [String] = [],
+            specificDomainHostList: [String] = []
         ) {
             self.lengthLimitPersonalName = lengthLimitPersonalName
-            self.specificDomainList = specificDomainList
-            specificHostBlacklist = hostBlacklist
-            specificHostList = specificHost
+            self.specificTLDList = specificTLDList
+            self.specificDomainHostBlacklist = specificDomainHostBlacklist
+            self.specificDomainHostList = specificDomainHostList
         }
     }
 }
@@ -54,6 +54,9 @@ extension SuperValidator {
 
 extension SuperValidator {
     internal func emailValidator(_ string: String, options: Option.Email = .init()) -> Result<Void, EmailErrorType> {
+        
+        // Default Match
+        // ex : teddy@example.com
         var subStrings = string.components(separatedBy: "@").filter { $0.isNotEmpty }
         
         guard string.matches(Regex.emailStrict) else {
@@ -65,8 +68,6 @@ extension SuperValidator {
             return .failure(EmailErrorType.emailInvalid)
         }
         
-        // Default Match
-        // ex : teddy@tokopedia.com
             let personalName = subStrings.removeFirst()
             let domain = subStrings.removeLast()
             let domainParts = domain.components(separatedBy: ".").filter { $0.isNotEmpty }
@@ -84,24 +85,30 @@ extension SuperValidator {
                 }
             }
 
-            // Specific Host
-            if options.specificHostList.isNotEmpty {
-                if !options.specificHostList.contains(hostName ?? "") {
+            // Specific Domain Host
+            // ex : teddy@example.com
+            // Domain host : example
+            if options.specificDomainHostList.isNotEmpty {
+                if !options.specificDomainHostList.contains(hostName ?? "") {
                     return .failure(.specificHost)
                 }
             }
         
             
-            // Blacklist
-            if options.specificHostBlacklist.isNotEmpty, let _ = options.specificHostBlacklist.first(where: {
+            // Blacklist Domain Host
+            // ex : teddy@example.com
+            // Domain host : example
+            if options.specificDomainHostBlacklist.isNotEmpty, let _ = options.specificDomainHostBlacklist.first(where: {
                 $0 == hostName
             }) {
                 return .failure(.blacklistHost)
             }
       
             // Top Level Domain
-            if options.specificDomainList.isNotEmpty {
-                if !options.specificDomainList.contains(tld ?? "") {
+            // ex : teddy@example.com
+            // Top Level Domain : .com
+            if options.specificTLDList.isNotEmpty {
+                if !options.specificTLDList.contains(tld ?? "") {
                     return .failure(.levelDomainHost)
                 }
             }
