@@ -15,7 +15,7 @@ internal final class PhoneValidatorTests: XCTestCase {
     // Valid
     internal func testValidPhoneNumberInternational() {
         let phoneInternational = "+628916123123"
-        let isValidInternational = validator.isPhoneValid(phoneInternational, options: .init(phoneFormatType: .international))
+        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneFormatType: .international))
         switch isValidInternational {
             case .success(let value):
                 XCTAssertTrue(value)
@@ -28,7 +28,7 @@ internal final class PhoneValidatorTests: XCTestCase {
     
     internal func testValidPhoneNumberNANP() {
         let phoneNANP = "(415) 555 0132"
-        let isValidNANP = validator.isPhoneValid(phoneNANP, options: .init(phoneFormatType: .nanp))
+        let isValidNANP = validator.validatePhone(phoneNANP, options: .init(phoneFormatType: .nanp))
         switch isValidNANP {
             case .success(let value):
                 XCTAssertTrue(value)
@@ -40,7 +40,7 @@ internal final class PhoneValidatorTests: XCTestCase {
     
     internal func testValidPhoneNumberEPP() {
         let phoneEPP = "+44.2087712924"
-        let isValidEPP = validator.isPhoneValid(phoneEPP, options: .init(phoneFormatType: .epp))
+        let isValidEPP = validator.validatePhone(phoneEPP, options: .init(phoneFormatType: .epp))
         switch isValidEPP {
             case .success(let value):
                 XCTAssertTrue(value)
@@ -53,7 +53,7 @@ internal final class PhoneValidatorTests: XCTestCase {
     // Invalid
     internal func testInValidPhoneNumberInternational() {
         let phoneInternational = "+6212312311238918989898989889"
-        let isValidInternational = validator.isPhoneValid(phoneInternational, options: .init(phoneFormatType: .international))
+        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneFormatType: .international))
         switch isValidInternational {
             case .success(let value):
                 XCTAssertTrue(value)
@@ -66,7 +66,7 @@ internal final class PhoneValidatorTests: XCTestCase {
     
     internal func testInValidPhoneNumberNANP() {
         let phoneNANP = "(415) 555 0132 1231"
-        let isValidNANP = validator.isPhoneValid(phoneNANP, options: .init(phoneFormatType: .nanp))
+        let isValidNANP = validator.validatePhone(phoneNANP, options: .init(phoneFormatType: .nanp))
         switch isValidNANP {
             case .success(let value):
                 XCTAssertTrue(value)
@@ -79,7 +79,7 @@ internal final class PhoneValidatorTests: XCTestCase {
     
     internal func testInValidPhoneNumberEPP() {
         let phoneEPP = "+4423.2087712924"
-        let isValidEPP = validator.isPhoneValid(phoneEPP, options: .init(phoneFormatType: .epp))
+        let isValidEPP = validator.validatePhone(phoneEPP, options: .init(phoneFormatType: .epp))
         switch isValidEPP {
             case .success(let value):
                 XCTAssertTrue(value)

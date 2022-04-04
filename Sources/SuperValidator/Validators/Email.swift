@@ -49,7 +49,6 @@ extension SuperValidator {
             }
         }
     }
-
 }
 
 extension SuperValidator {

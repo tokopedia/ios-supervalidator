@@ -26,8 +26,29 @@ extension SuperValidator.Option {
     }
 }
 
+// MARK: - Error
 extension SuperValidator {
-    internal func validatePhone(_ string: String, options: Option.Phone = .init()) -> Result<Bool, ErrorType> {
+    public enum PhoneErrorType: Error, LocalizedError {
+        case displayNameMoreThanLimit
+        case specificHost
+        case blacklistHost
+        case levelDomainHost
+        case emailInvalid
+        
+        public var errorDescription: String? {
+            switch self {
+            case .displayNameMoreThanLimit, .specificHost, .levelDomainHost, .blacklistHost :
+                return nil
+            case .emailInvalid:
+                return "Invalid Email"
+            }
+        }
+    }
+}
+
+
+extension SuperValidator {
+    internal func phoneValidator(_ string: String, options: Option.Phone = .init()) -> Result<Bool, ErrorType> {
         let _string = string
         switch options.phoneFormatType {
         case .international:
