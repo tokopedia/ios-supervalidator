@@ -8,8 +8,11 @@
 import Foundation
 
 public enum PhoneFormat {
+    // International Phone
     case international
+    // North American Phone
     case nanp
+    // European People's Party
     case epp
 }
 
