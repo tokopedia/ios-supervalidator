@@ -40,10 +40,8 @@ extension SuperValidator {
         
         public var errorDescription: String? {
             switch self {
-            case .invalidCountryCode:
+            case .invalidCountryCode, .invalidPhone:
                 return nil
-            case .invalidPhone:
-                return "Invalid Phone number"
             }
         }
     }
