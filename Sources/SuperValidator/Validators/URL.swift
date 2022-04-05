@@ -7,58 +7,103 @@
 
 import Foundation
 
+// MARK: - Option
+
 extension SuperValidator.Option {
     /// URL Options
     public struct URL {
         public typealias Protocols = [String]
         public typealias Path = [String]
-        public typealias Host = [String]
-        /// valid protocol ( e.g https. http, ftp )
+        public typealias Domain = [String]
+        /// valid protocol [https. http, ftp]
         public let protocols: Protocols
-        /// if true, url must have protocol
+        /// if set to true, url must have protocol
         public let requireProtocol: Bool
-        /// protocol must be the same as one of valid protocol listed in protocols constant
+        /// protocol must be the same as one of the valid protocol listed in protocols parameter
         public let requireValidProtocol: Bool
-        /// path ( e.g /user/edit/{userID} )
+        /// url path ( e.g /user/edit/{userID} )
         public let paths: Path
-        /// query ( e.g page=1&sort=asc )
+        /// if set to true, allow query components ( e.g page=1&sort=asc )
         public let allowQueryComponents: Bool
-        /// hostname must be the same as one of whitelisted host
-        public let hostWhitelist: Host
-        /// hostname can't be the same as one of blacklisted host
-        public let hostBlacklist: Host
+        /// domain must be the same as one of whitelisted domain
+        public let domainWhitelist: Domain
+        /// domain can't be the same as one of blacklisted domain
+        public let domainBlacklist: Domain
         /// Fully Qualified Domain Name`
-        public let fdqn: FQDN
-
+        public let fqdn: FQDN
+        
+        /// - Parameters:
+        ///    - protocols: valid protocol [https. http, ftp]
+        ///    - requireProtocol: if set to true, url must have protocol
+        ///    - requireValidProtocol: protocol must be the same as one of the valid protocol listed in protocols parameter
+        ///    - paths: url path ( e.g /user/edit/{userID} )
+        ///    - allowQueryComponents: if set to true, allow query components ( e.g page=1&sort=asc )
+        ///    - domainWhitelist: domain must be the same as one of whitelisted domain
+        ///    - domainBlacklist: domain can't be the same as one of blacklisted domain
+        ///    - fqdn: Fully Qualified Domain Name
         public init(
             protocols: Protocols = ["https", "http", "ftp"],
             requireProtocol: Bool = false,
             requireValidProtocol: Bool = true,
             paths: Path = [],
             allowQueryComponents: Bool = true,
-            hostWhitelist: Host = [],
-            hostBlacklist: Host = [],
-            fdqn: FQDN = .init()
+            domainWhitelist: Domain = [],
+            domainBlacklist: Domain = [],
+            fqdn: FQDN = .init()
         ) {
             self.protocols = protocols
             self.requireProtocol = requireProtocol
             self.requireValidProtocol = requireValidProtocol
             self.paths = paths
             self.allowQueryComponents = allowQueryComponents
-            self.hostWhitelist = hostWhitelist
-            self.hostBlacklist = hostBlacklist
-            self.fdqn = fdqn
+            self.domainWhitelist = domainWhitelist
+            self.domainBlacklist = domainBlacklist
+            self.fqdn = fqdn
         }
     }
 }
 
+// MARK: - Error
+
 extension SuperValidator {
-    internal func validateURL(_ string: String, options: Option.URL) -> Bool {
-        guard string.isNotEmpty, !string.containsWhitespace else { return false }
+    public enum URLError: Error, LocalizedError, Equatable {
+        case notUrl
+        case containsWhitespace
+        case containsQueryComponents
+        /// protocol not contained in protocols parameter
+        case invalidProtocol
+        case noProtocol
+        case invalidPath
+        /// domain not contained in domainWhitelist parameter
+        case invalidDomain
+        case blacklistedDomain
+        case invalidFQDN
+        
+        public var errorDescription: String? {
+            switch self {
+            case .notUrl:
+                return "Please enter an url"
+            case .containsWhitespace, .containsQueryComponents, .invalidProtocol,
+                 .noProtocol, .invalidPath, .invalidDomain, .blacklistedDomain,
+                 .invalidFQDN:
+                return "Please enter a valid url"
+            }
+        }
+    }
+}
+
+// MARK: - Validator
+
+extension SuperValidator {
+    internal func urlValidator(_ string: String, options: Option.URL) -> Result<Void, URLError> {
+        guard string.isNotEmpty else { return .failure(.notUrl) }
+        guard !string.containsWhitespace else { return .failure(.containsWhitespace) }
+        guard string.matches(Regex.url) else { return .failure(.notUrl) }
+        
         var url = string
 
         if !options.allowQueryComponents, url.contains("?") || url.contains("&") {
-            return false
+            return .failure(.containsQueryComponents)
         }
 
         // example url https://en.wikipedia.org/wiki/Internet?page=1&p=a#Terminology
@@ -77,14 +122,14 @@ extension SuperValidator {
         if parts.count > 1 {
             if let _protocol = parts[safe: 0] {
                 if options.requireValidProtocol, !options.protocols.contains(_protocol) {
-                    return false
+                    return .failure(.invalidProtocol)
                 }
             }
         } else if options.requireProtocol {
-            return false
+            return .failure(.noProtocol)
         }
 
-        if url.isEmpty { return false }
+        if url.isEmpty { return .failure(.notUrl) }
         url = parts.removeLast()
 
         parts = url.components(separatedBy: "/")
@@ -92,35 +137,35 @@ extension SuperValidator {
         
         let pathOptions = options.paths
         if pathOptions.isNotEmpty, !checkPath(parts, options: pathOptions) {
-            return false
+            return .failure(.invalidPath)
         }
 
         if url.isEmpty {
-            return false
+            return .failure(.notUrl)
         }
 
-        let hostname = url
+        let domain = url
 
-        if options.hostWhitelist.isNotEmpty, !checkHost(host: hostname, matches: options.hostWhitelist) {
-            return false
+        if options.domainWhitelist.isNotEmpty, !checkDomain(domain, matches: options.domainWhitelist) {
+            return .failure(.invalidDomain)
         }
 
-        if options.hostBlacklist.isNotEmpty, checkHost(host: hostname, matches: options.hostBlacklist) {
-            return false
+        if options.domainBlacklist.isNotEmpty, checkDomain(domain, matches: options.domainBlacklist) {
+            return .failure(.blacklistedDomain)
+        }
+        
+        if !isFQDN(domain, options: options.fqdn) {
+            return .failure(.invalidFQDN)
         }
 
-        if !isFQDN(hostname, options: options.fdqn) {
-            return false
-        }
-
-        return true
+        return .success(())
     }
     
-    // MARK: - Check Host
+    // MARK: - Check Domain
 
-    fileprivate func checkHost(host: String, matches: [String]) -> Bool {
+    fileprivate func checkDomain(_ domain: String, matches: [String]) -> Bool {
         for match in matches {
-            if host == match || host.matches(match) {
+            if domain == match || domain.matches(match) {
                 return true
             }
         }

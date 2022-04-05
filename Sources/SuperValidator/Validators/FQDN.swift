@@ -16,7 +16,12 @@ extension SuperValidator.Option {
         public let allowTrailingDot: Bool
         /// Wildcard DNS record
         public let allowWildcard: Bool
-
+        
+        /// - Parameters:
+        ///    - requireTLD: Top Level Domain
+        ///    - allowUnderscores
+        ///    - allowTrailingDot
+        ///    - allowWildcard:Wildcard DNS record
         public init(
             requireTLD: Bool = true,
             allowUnderscores: Bool = false,
@@ -32,7 +37,7 @@ extension SuperValidator.Option {
 }
 
 extension SuperValidator {
-    internal func validateFQDN(_ string: String, options: Option.FQDN = .init()) -> Bool {
+    internal func fqdnValidator(_ string: String, options: Option.FQDN = .init()) -> Bool {
         var _string = string
 
         // Remove the optional trailing dot before checking validity
