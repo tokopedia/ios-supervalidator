@@ -14,17 +14,14 @@ internal final class PhoneValidatorTests: XCTestCase {
     
     // Valid
     internal func testValidPhoneNumberInternational() {
-        let phoneInternational = "+628916123123"
-        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneFormatType: .international, specifiedCountryCode: ["+62"]))
+        let phoneInternational = "08916123123"
+        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneFormatType: .international, specifiedCountryCode: ["62"]))
         switch isValidInternational {
         case .success:
                 XCTAssertTrue(true)
-                break
             case let .failure(error):
             XCTFail("Expected to be a success but got a failure with \(error)")
-                break
         }
-       
     }
     
     internal func testValidPhoneNumberNANP() {
@@ -33,10 +30,8 @@ internal final class PhoneValidatorTests: XCTestCase {
         switch isValidNANP {
             case .success:
                 XCTAssertTrue(true)
-                break
             case let .failure(error):
                 XCTFail("Expected to be a success but got a failure with \(error)")
-            break
         }
     }
     
@@ -46,10 +41,8 @@ internal final class PhoneValidatorTests: XCTestCase {
         switch isValidEPP {
             case .success:
             XCTAssertTrue(true)
-                break
             case let .failure(error):
             XCTFail("Expected to be a success but got a failure with \(error)")
-                break
         }
     }
     
@@ -60,10 +53,8 @@ internal final class PhoneValidatorTests: XCTestCase {
         switch isValidInternational {
             case .success:
                 XCTAssertTrue(true)
-                break
             case .failure(let error):
             XCTAssertEqual(error, SuperValidator.PhoneError.invalidPhone)
-                break
         }
     }
     
@@ -73,10 +64,8 @@ internal final class PhoneValidatorTests: XCTestCase {
         switch isValidNANP {
             case .success:
                 XCTAssertTrue(true)
-                break
             case .failure(let error):
             XCTAssertEqual(error, SuperValidator.PhoneError.invalidPhone)
-                break
         }
     }
     
@@ -86,10 +75,8 @@ internal final class PhoneValidatorTests: XCTestCase {
         switch isValidEPP {
             case .success:
                 XCTAssertTrue(true)
-                break
             case .failure(let error):
             XCTAssertEqual(error, SuperValidator.PhoneError.invalidPhone)
-                break
         }
     }
 }

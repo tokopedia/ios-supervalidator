@@ -22,7 +22,7 @@ internal enum Regex {
     internal static let emailLax = #".+@([A-Za-z0-9]+\\.)+[A-Za-z]{2}[A-Za-z]*"#
     // MARK: Phone
     // International Phone
-    internal static let internationalPhoneFormat = #"\+(?:[0-9]){6,14}[0-9]$"#
+    internal static let internationalPhoneFormat = #"(?:[0-9]){6,14}[0-9]$"#
     // North American Phone
     internal static let NANPPhoneFormat = #"^\(?([2-9][0-9]{2})\)?[-. ]?([2-9](?!11)[0-9]{2})[-. ]?([0-9]{4})$"#
     // European People's Party

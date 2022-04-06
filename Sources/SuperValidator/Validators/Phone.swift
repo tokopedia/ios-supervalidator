@@ -56,13 +56,17 @@ extension SuperValidator {
                 return .failure(PhoneError.invalidPhone)
             }
             
-            let phoneCode = string.prefix(3)
             if options.specifiedCountryCode.isNotEmpty {
+                var phoneCode = ""
+                if string.first == "0" {
+                    phoneCode = "62"
+                } else {
+                    phoneCode = String(string.prefix(2))
+                }
                 if !options.specifiedCountryCode.contains(String(phoneCode)) {
                     return .failure(.invalidCountryCode)
                 }
             }
-            
             
         case .nanp:
             guard string.matches(Regex.NANPPhoneFormat) else {

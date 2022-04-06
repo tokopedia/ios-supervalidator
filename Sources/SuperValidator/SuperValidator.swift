@@ -61,7 +61,7 @@ public class SuperValidator {
     ///   - string: phone in string
     ///   - options: phone options
     /// - Returns: if the phone matches the options, return true
-    public func isPhone(_ string: String, options: Option.Phone = .init()) -> Bool {
+    public func isPhoneNumber(_ string: String, options: Option.Phone = .init()) -> Bool {
         let result = validatePhone(string, options: options)
         switch result {
         case .success: return true
