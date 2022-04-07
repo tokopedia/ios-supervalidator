@@ -87,6 +87,13 @@ extension SuperValidator {
                     }
                 }
             }
+            if options.blacklistPhoneNumberCountry.isNotEmpty {
+                options.blacklistPhoneNumberCountry.forEach { phoneNumberCountry in
+                    if phoneNumber.contains(phoneNumberCountry.countryCode) {
+                        countryCode = phoneNumberCountry.countryCode
+                    }
+                }
+            }
         }
         // Whitelist Country
         if options.whitelistPhoneNumberCountry.isNotEmpty {

@@ -34,9 +34,9 @@ internal final class PhoneNumberValidatorTests: XCTestCase {
         }
     }
     
-    internal func testValidPhoneNumberInternationalWithBlacklistCodeWithoutUsingNationalPrefix() {
-        let phoneInternational = "65896123123"
-        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneNumberFormatType: .international, blacklistPhoneNumberCountry: [.singapore], isUsingNationalPrefix: false))
+    internal func testValidPhoneNumberInternationalWithNoBlacklistCodeWithoutUsingNationalPrefix() {
+        let phoneInternational = "62896123123"
+        let isValidInternational = validator.validatePhone(phoneInternational, options: .init(phoneNumberFormatType: .international, blacklistPhoneNumberCountry: [.singapore]))
         switch isValidInternational {
         case .success:
                 XCTAssertTrue(true)
