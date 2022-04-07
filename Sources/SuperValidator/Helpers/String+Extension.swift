@@ -44,19 +44,4 @@ extension String {
             return ""
         }
     }
-    
-}
-
-// Phone Validator
-extension String {
-    internal func getCountryCodeNANP() -> String {
-        var countryCode = self.stringBefore(")")
-        countryCode.removeFirst()
-        return countryCode
-    }
-    
-    internal func getCountryCodeEPP() -> String {
-        let countryCode = self.stringBefore(".")
-        return countryCode
-    }
 }
