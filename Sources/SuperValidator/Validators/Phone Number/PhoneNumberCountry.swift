@@ -34,13 +34,7 @@ public enum PhoneNumberCountry: Equatable {
     
     internal var nationalPrefix: String {
         switch self {
-        case .australia:
-            return "0"
-        case .brazil:
-            return "0"
-        case .india:
-            return "0"
-        case .indonesia:
+        case .australia, .brazil, .india, .indonesia:
             return "0"
         case .singapore:
             return "-"
