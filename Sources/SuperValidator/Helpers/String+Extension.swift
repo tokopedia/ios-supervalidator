@@ -36,4 +36,12 @@ extension String {
     internal func removeCharacter(char: String) -> String {
         return replacingOccurrences(of: char, with: "")
     }
+    
+    internal func stringBefore(_ delimiter: Character) -> String {
+        if let index = firstIndex(of: delimiter) {
+            return String(prefix(upTo: index))
+        } else {
+            return ""
+        }
+    }
 }

@@ -71,6 +71,30 @@ public class SuperValidator {
         return fqdnValidator(string, options: options)
     }
     
+    // MARK: - Phone
+
+    /// validate phone
+    /// - Parameters:
+    ///   - string: phone in string
+    ///   - options: phone options
+    /// - Returns: the response either .success(()) or let .failure(let error)
+    public func validatePhone(_ string: String, options: Option.PhoneNumber = .init()) -> Result<Void, PhoneNumberError> {
+        return phoneValidator(string, options: options)
+    }
+    
+    /// validate phone
+    /// - Parameters:
+    ///   - string: phone in string
+    ///   - options: phone options
+    /// - Returns: if the phone matches the options, return true
+    public func isPhoneNumber(_ string: String, options: Option.PhoneNumber = .init()) -> Bool {
+        let result = validatePhone(string, options: options)
+        switch result {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
     // MARK: - Email
     
     /// Use this function to custom the error resposne 
