@@ -41,7 +41,7 @@ public enum PhoneNumberCountry: Equatable {
         case .india:
             return "0"
         case .indonesia:
-            return "12"
+            return "0"
         case .singapore:
             return "-"
         case let .custom(_, nationalPrefix, _):
@@ -62,7 +62,7 @@ public enum PhoneNumberCountry: Equatable {
         case .singapore:
             return 12
         case let .custom(_, _, maxlLength):
-            return maxlLength ?? 0
+            return maxlLength ?? 15
         }
     }
 }

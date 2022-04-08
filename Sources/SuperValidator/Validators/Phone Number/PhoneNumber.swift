@@ -21,21 +21,21 @@ public enum PhoneNumberFormat {
 
 extension SuperValidator.Option {
     public struct PhoneNumber {
-        public let phoneNumberFormatType: PhoneNumberFormat
-        public let whitelistPhoneNumberCountry: [PhoneNumberCountry]
-        public let blacklistPhoneNumberCountry: [PhoneNumberCountry]
-        public let isUsingNationalPrefix: Bool
+        public let formatType: PhoneNumberFormat
+        public let whitelist: [PhoneNumberCountry]
+        public let blacklist: [PhoneNumberCountry]
+        public let isAllowNationalPrefix: Bool
         
         public init(
-            phoneNumberFormatType: PhoneNumberFormat = .international,
-            whitelistPhoneNumberCountry: [PhoneNumberCountry] = [],
-            blacklistPhoneNumberCountry: [PhoneNumberCountry] = [],
-            isUsingNationalPrefix: Bool = false
+            formatType: PhoneNumberFormat = .international,
+            whitelist: [PhoneNumberCountry] = [],
+            blacklist: [PhoneNumberCountry] = [],
+            isAllowNationalPrefix: Bool = false
         ) {
-            self.phoneNumberFormatType = phoneNumberFormatType
-            self.whitelistPhoneNumberCountry = whitelistPhoneNumberCountry
-            self.blacklistPhoneNumberCountry = blacklistPhoneNumberCountry
-            self.isUsingNationalPrefix = isUsingNationalPrefix
+            self.formatType = formatType
+            self.whitelist = whitelist
+            self.blacklist = blacklist
+            self.isAllowNationalPrefix = isAllowNationalPrefix
         }
     }
 }
@@ -48,10 +48,11 @@ extension SuperValidator {
         case invalidPhoneNumber
         case invalidNationalPrefix
         case invalidMaxLength
+        case invalidCountry
         
         public var errorDescription: String? {
             switch self {
-            case .invalidCountryCode, .invalidPhoneNumber, .invalidNationalPrefix, .invalidMaxLength, .countryBlacklisted:
+            case .invalidCountryCode, .invalidPhoneNumber, .invalidNationalPrefix, .invalidMaxLength, .countryBlacklisted, .invalidCountry:
                 return nil
             }
         }
@@ -62,7 +63,7 @@ extension SuperValidator {
     internal func phoneValidator(_ phoneNumber: String, options: Option.PhoneNumber = .init()) -> Result<Void, PhoneNumberError> {
         var countryCode = ""
         var nationalPrefix = ""
-        switch options.phoneNumberFormatType {
+        switch options.formatType {
         case .nanp:
             guard phoneNumber.matches(Regex.NANPPhoneFormat) else {
                 return .failure(.invalidPhoneNumber)
@@ -77,49 +78,58 @@ extension SuperValidator {
             guard phoneNumber.matches(Regex.internationalPhoneFormat) else {
                 return .failure(.invalidPhoneNumber)
             }
-            if options.whitelistPhoneNumberCountry.isNotEmpty {
-                options.whitelistPhoneNumberCountry.forEach { phoneNumberCountry in
-                    if phoneNumber.contains(phoneNumberCountry.countryCode) {
-                        countryCode = phoneNumberCountry.countryCode
+            /// `The Data already predefined
+            /// ex : whiltelistPhoneNumberCountry : [.indonesia] -> which the country code is 62
+            /// Country code is the first character until x index (Based on the country code that already defined)
+            /// a. `Using Contains (NOT SATISFY THE REQUIREMENT)
+            ///   `The Algorithm behind contains
+             /*
+              public func contains(
+                    where predicate: (Element) throws -> Bool
+                  ) rethrows -> Bool {
+                    for e in self {
+                      if try predicate(e) {
+                        return true
+                      }
                     }
-                    if phoneNumber.contains(phoneNumberCountry.nationalPrefix) {
-                        nationalPrefix = phoneNumberCountry.nationalPrefix
-                    }
+              return false
+          }*/
+            ///  phoneNumber = "12062896132323" , expected return false, but return true
+            /// b. `Using Prefix (SATISFY THE REQUIREMENT) based on the current country code length
+            ///  phoneNumber = "12062896132323", , expected return false, and return false
+            ///  phoneNumber = "62896132323123", , expected return true, and return true
+            if options.whitelist.isNotEmpty {
+                options.whitelist.forEach { phoneNumberCountry in
+                    countryCode = String(phoneNumber.prefix(phoneNumberCountry.countryCode.count))
+                    nationalPrefix = String(phoneNumber.prefix(phoneNumberCountry.nationalPrefix.count))
                 }
             }
-            if options.blacklistPhoneNumberCountry.isNotEmpty {
-                options.blacklistPhoneNumberCountry.forEach { phoneNumberCountry in
-                    if phoneNumber.contains(phoneNumberCountry.countryCode) {
-                        countryCode = phoneNumberCountry.countryCode
-                    }
+            if options.blacklist.isNotEmpty {
+                options.blacklist.forEach { phoneNumberCountry in
+                    countryCode = String(phoneNumber.prefix(phoneNumberCountry.countryCode.count))
                 }
             }
         }
-        // Whitelist Country
-        if options.whitelistPhoneNumberCountry.isNotEmpty {
+        /// Whitelist Country
+        if options.whitelist.isNotEmpty {
             var isFoundPhoneNumberCountryCode = false
             var isFoundPhoneNumberNationalPrefix = false
             var isPhoneNumberLengthValid = true
-            options.whitelistPhoneNumberCountry.forEach { phoneNumberCountry in
-                // Phone Number National Prefix
+            options.whitelist.forEach { phoneNumberCountry in
                 if phoneNumberCountry.nationalPrefix == nationalPrefix {
                     isFoundPhoneNumberNationalPrefix = true
                 }
-                // Phone Number Country Code
                 if phoneNumberCountry.countryCode == countryCode {
                     isFoundPhoneNumberCountryCode = true
                 }
-                // Phone number max length
                 if phoneNumberCountry.maxLength < phoneNumber.count {
                     isPhoneNumberLengthValid = false
                 }
             }
-            if options.isUsingNationalPrefix {
-                if !isFoundPhoneNumberNationalPrefix {
-                    return .failure(.invalidNationalPrefix)
-                }
-                if !isFoundPhoneNumberCountryCode {
-                    return .success(())
+            if options.isAllowNationalPrefix {
+                // Expected can receive 0 or 62
+                if !isFoundPhoneNumberNationalPrefix && !isFoundPhoneNumberCountryCode{
+                    return .failure(.invalidCountry)
                 }
                 if !isPhoneNumberLengthValid {
                     return .failure(.invalidMaxLength)
@@ -132,12 +142,12 @@ extension SuperValidator {
                     return .failure(.invalidMaxLength)
                 }
             }
-        
         }
-        // Blacklist Country
-        if options.blacklistPhoneNumberCountry.isNotEmpty {
+        /// Blacklist Country
+        /// Check based on only the country code because national prefix is not unique
+        if options.blacklist.isNotEmpty {
             var isFoundCountryCode = false
-            options.blacklistPhoneNumberCountry.forEach { phoneNumberCountry in
+            options.blacklist.forEach { phoneNumberCountry in
                 if phoneNumberCountry.countryCode == countryCode {
                     isFoundCountryCode = true
                 }
