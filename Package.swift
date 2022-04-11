@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "SuperValidator",
-    platforms: [.iOS(.v13)],
+    platforms: [.iOS(.v12)],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
@@ -26,5 +26,5 @@ let package = Package(
             name: "SuperValidatorTests",
             dependencies: ["SuperValidator"]),
     ],
-    swiftLanguageVersions: [.v5]
+    swiftLanguageVersions: [.v4]
 )
