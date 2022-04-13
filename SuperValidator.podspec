@@ -12,4 +12,8 @@ Pod::Spec.new do |s|
   s.swift_version = '4.0'
 
   s.source_files = 'Sources/SuperValidator/**/*'
+  
+  s.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'Tests/*.{h,m}'
+  end
 end
