@@ -7,12 +7,6 @@ SuperValidator is option-based validator for Swift.
 ### Pods
 
 ```swift
-# Podfile
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, "9.0"
-
-use_frameworks!
-
 pod 'SuperValidator', :git => 'https://github.com/tokopedia/ios-supervalidator.git'
 ```
 
