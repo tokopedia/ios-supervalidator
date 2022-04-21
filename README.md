@@ -5,13 +5,16 @@ SuperValidator is option-based validator for Swift.
 ## Installation
 
 ### Pods
-
+To install via Pods just add this to your podfile.
 ```swift
 pod 'SuperValidator', :git => 'https://github.com/tokopedia/ios-supervalidator.git'
 ```
 
 ### Swift Package Manager
-https://www.swift.org/package-manager/
+To install via [SPM](https://www.swift.org/package-manager/) just press '+' sign in Xcode list of packages and paste repo address: '[https://github.com/tokopedia/ios-supervalidator](https://github.com/tokopedia/ios-supervalidator)' into the search field and click `Add Package`:
+
+![SPM installation](https://user-images.githubusercontent.com/85599884/164421707-8adb8ebb-455a-4494-ac39-682e58fd74c0.png)
+
 
 
 ## Basic Usage
@@ -21,14 +24,14 @@ Return a boolean value
 let validator = SuperValidator.shared
 let url = "https://www.tokopedia.com/shop/test"
 let options = SuperValidator.Option.URL = .init(
-    protocols: ["https", "http"],
-    requireProtocol: true,
-    requireValidProtocol: true,
-    paths: ["/shop/{shopSlug}"],
-    allowQueryComponents: false,
-    domainWhitelist: [#"(www\.)?(tokopedia\.com)"#],
-    domainBlacklist: [],
-    fqdn: .init()
+	protocols: ["https", "http"],
+	requireProtocol: true,
+	requireValidProtocol: true,
+	paths: ["/shop/{shopSlug}"],
+	allowQueryComponents: false,
+	domainWhitelist: [#"(www\.)?(tokopedia\.com)"#],
+	domainBlacklist: [],
+	fqdn: .init()
 )
 
 let isURL = validator.isURL(url, options: options)
