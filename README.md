@@ -73,6 +73,7 @@ case .success: break
 
 ## Validators
 - [URL](https://github.com/tokopedia/ios-supervalidator/blob/main/Sources/SuperValidator/Validators/URL.swift) 
+- [Social Media URL](https://github.com/tokopedia/ios-supervalidator/blob/main/Sources/SuperValidator/Validators/SocialMediaURL.swift) 
 - [FQDN](https://github.com/tokopedia/ios-supervalidator/blob/main/Sources/SuperValidator/Validators/FQDN.swift)
 - [Email](https://github.com/tokopedia/ios-supervalidator/blob/main/Sources/SuperValidator/Validators/Email.swift)
 - [Phone Number](https://github.com/tokopedia/ios-supervalidator/blob/main/Sources/SuperValidator/Validators/Phone%20Number/PhoneNumber.swift)
