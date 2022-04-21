@@ -82,9 +82,14 @@ case .success: break
 If you want to discuss the SuperPlayer or have a question about how to use it to solve your video player problem, you can start a topic in the [issues](https://github.com/tokopedia/ios-supervalidator/issues) tab of this repo
 
 ## Future Plans
+
 - Bind with TextField
 - Bind with Rx
 - More incoming validators
+
+## Credits
+
+SuperValidator is written and maintaned by Tokopedia iOS Superman Squad. [Alvin Matthew Pratama](https://www.linkedin.com/in/alvin-matthew-pratama-8778011b0/) actively works to maintain SuperValidator. Thanks to [Christopher Teddy Mienarto](https://www.linkedin.com/in/christophermienarto/) for helps creating email, phone number and more  incoming validators.
 
 ##  License
 
