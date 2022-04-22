@@ -22,6 +22,16 @@ To install via [SPM](https://www.swift.org/package-manager/) just press '+' sign
 ## Basic Usage
 
 Return a boolean value
+
+```swift
+let validator = SuperValidator.shared
+let url = "https://www.tokopedia.com/shop/test"
+let isURL = validateURL(url, options: .init())
+print(isURL) // true
+```
+
+With custom options. For detail explanation [here](https://github.com/tokopedia/ios-supervalidator/blob/add-readme/Sources/SuperValidator/Validators/URL.swift).
+
 ```swift
 let validator = SuperValidator.shared
 let url = "https://www.tokopedia.com/shop/test"
