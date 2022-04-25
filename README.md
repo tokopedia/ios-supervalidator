@@ -92,7 +92,7 @@ case .success: break
   
 ##  Help
 
-If you want to discuss the SuperPlayer or have a question about how to use it to solve your video player problem, you can start a topic in the [issues](https://github.com/tokopedia/ios-supervalidator/issues) tab of this repo
+If you want to discuss the SuperValidator or have a question about how to use it to solve your video player problem, you can start a topic in the [issues](https://github.com/tokopedia/ios-supervalidator/issues) tab of this repo
 
 ## Future Plans
 
