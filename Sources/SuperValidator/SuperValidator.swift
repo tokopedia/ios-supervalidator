@@ -128,8 +128,8 @@ public class SuperValidator {
     ///    - string: credit card number in String
     ///    - options: credit card  options
     /// - Returns: the response either .success(()) or let .failure(let error)
-    public func validateCreditCard(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
-        return creditCardValidator(string, options: options)
+    public func validateCreditCard(_ string: String, expiryDate: String, csc: String , options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+        return creditCardValidator(string, expiryDate: expiryDate, csc: csc, options: options)
     }
     
     /// Custom Email Validation
@@ -137,8 +137,8 @@ public class SuperValidator {
     ///    - string: credit card number in String
     ///    - options: credit card  options
     /// - Returns: if the domain matches the options, return true
-    public func isCreditCard(_ string: String, options: Option.CreditCard = .init()) -> Bool {
-        let result = validateCreditCard(string, options: options)
+    public func isCreditCard(_ string: String, expiryDate: String, csc: String,options: Option.CreditCard = .init()) -> Bool {
+        let result = validateCreditCard(string, expiryDate: expiryDate, csc: csc, options: options)
         switch result {
         case .success: return true
         case .failure: return false

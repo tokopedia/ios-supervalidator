@@ -37,4 +37,6 @@ internal enum Regex {
     internal static let masterCard = #"^(5[1-5][0-9]{4}|677189)[0-9]{5,}$"#
     // American Express
     internal static let amex = #"^3[47]\d{13,14}$"#
+    // Discover
+    internal static let discover = #"/^(?:6011\d{12})|(?:65\d{14})$/"#
 }
