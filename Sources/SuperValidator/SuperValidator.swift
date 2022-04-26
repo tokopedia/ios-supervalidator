@@ -119,6 +119,32 @@ public class SuperValidator {
         case .failure: return false
         }
     }
+    
+    // MARK: - Credit Card
+    
+    /// Use this function to custom the error resposne
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: credit card number in String
+    ///    - options: credit card  options
+    /// - Returns: the response either .success(()) or let .failure(let error)
+    public func validateCreditCard(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+        return creditCardValidator(string, options: options)
+    }
+    
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: credit card number in String
+    ///    - options: credit card  options
+    /// - Returns: if the domain matches the options, return true
+    public func isCreditCard(_ string: String, options: Option.CreditCard = .init()) -> Bool {
+        let result = validateCreditCard(string, options: options)
+        switch result {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
  
 }
 
