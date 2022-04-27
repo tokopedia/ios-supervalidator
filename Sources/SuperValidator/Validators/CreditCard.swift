@@ -20,6 +20,25 @@ public enum CreditCardType {
     /// Disocver
     /// Example: 60115564485789458 || 6500000000000000
     case discover
+    
+    internal var cardSecurityCodeName: String {
+        switch self {
+            /// cvv:  card verification value
+            case .visa: return "cvv"
+            /// cvc: card validation code
+            case .mastercard: return "cvc"
+            /// cid: card ID
+            case .amex: return "cid"
+            /// cvd: card verification data
+            case .discover: return "cvd"
+        }
+    }
+    internal var cardSecurityCodeLength: Int {
+        switch self {
+            case .visa, .mastercard, .discover: return 3
+            case .amex: return 4
+        }
+    }
 }
 
 extension SuperValidator.Option {
@@ -45,10 +64,10 @@ extension SuperValidator {
     public enum CreditCardError: Error, LocalizedError {
         case invalidCard
         case invalidExpiredDate
-        case invalidCVV
+        case invalidCSC
         public var errorDescription: String? {
             switch self {
-                case .invalidCard, .invalidExpiredDate, .invalidCVV:
+                case .invalidCard, .invalidExpiredDate, .invalidCSC:
                     return nil
             }
         }
@@ -56,7 +75,7 @@ extension SuperValidator {
 }
 
 extension SuperValidator {
-    internal func creditCardValidator(_ cardNumber: String, expiryDate: String , csc: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    internal func creditCardValidator(_ cardNumber: String,options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
         var tempCardNumber = cardNumber
         /// Using separator
         if options.separator.isNotEmpty {
@@ -83,16 +102,22 @@ extension SuperValidator {
                     return .failure(.invalidCard)
                 }
         }
+        return .success(())
+    }
+    
+    internal func creditCardExpiredDateValidator(expiryDate: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
         /// Expiry date should less than today
         if expiryDate.toDate() ?? Date() < Date() {
             return .failure(.invalidExpiredDate)
         }
+        return .success(())
+    }
+    
+    internal func creditCardCSCValidator(csc: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
         /// csc length should equal than card type
-        if csc.count < options.cardInformation.cardSecurityCodeLength {
-            return .failure(.invalidCVV)
+        if csc.count != options.cardType.cardSecurityCodeLength {
+            return .failure(.invalidCSC)
         }
-        
-        
         return .success(())
     }
 }

@@ -128,8 +128,8 @@ public class SuperValidator {
     ///    - string: credit card number in String
     ///    - options: credit card  options
     /// - Returns: the response either .success(()) or let .failure(let error)
-    public func validateCreditCard(_ string: String, expiryDate: String, csc: String , options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
-        return creditCardValidator(string, expiryDate: expiryDate, csc: csc, options: options)
+    public func validateCreditCardNumber(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+        return creditCardValidator(string, options: options)
     }
     
     /// Custom Email Validation
@@ -137,14 +137,61 @@ public class SuperValidator {
     ///    - string: credit card number in String
     ///    - options: credit card  options
     /// - Returns: if the domain matches the options, return true
-    public func isCreditCard(_ string: String, expiryDate: String, csc: String,options: Option.CreditCard = .init()) -> Bool {
-        let result = validateCreditCard(string, expiryDate: expiryDate, csc: csc, options: options)
+    public func isCreditCardNumber(_ string: String,options: Option.CreditCard = .init()) -> Bool {
+        let result = validateCreditCardNumber(string, options: options)
         switch result {
         case .success: return true
         case .failure: return false
         }
     }
     
+    /// Use this function to custom the error resposne
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: credit card expiry date in String, format MM/YYYY. ex : 03/2010
+    ///    - options: credit card  options
+    /// - Returns: the response either .success(()) or let .failure(let error)
+    /// Input paramt
+    public func validateCreditCardExpiredDate(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+        return creditCardExpiredDateValidator(expiryDate: string, options: options)
+    }
+    
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: credit card expiry date in String, format MM/YYYY. ex : 03/2010
+    ///    - options: credit card  options
+    /// - Returns: if the domain matches the options, return true
+    public func isCreditCardExpiredDate(_ string: String,options: Option.CreditCard = .init()) -> Bool {
+        let result = validateCreditCardExpiredDate(string, options: options)
+        switch result {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+    
+    /// Use this function to custom the error resposne
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: credit card csc (card security code) in String,
+    ///    - options: credit card  options
+    /// - Returns: the response either .success(()) or let .failure(let error)
+    /// Input paramt
+    public func validateCreditCardCSC(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+        return creditCardCSCValidator(csc: string, options: options)
+    }
+    
+    /// Custom Email Validation
+    /// - Parameters:
+    ///    - string: credit card csc (card security code) in String,
+    ///    - options: credit card  options
+    /// - Returns: if the domain matches the options, return true
+    public func isCreditCardCSC(_ string: String,options: Option.CreditCard = .init()) -> Bool {
+        let result = validateCreditCardCSC(string, options: options)
+        switch result {
+            case .success: return true
+            case .failure: return false
+        }
+    }
  
 }
 
