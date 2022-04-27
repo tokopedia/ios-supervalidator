@@ -14,7 +14,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     
     // Valid
     internal func testValidCreditCardVisa() {
-        let isVisa = validator.creditCardValidator("4263982640269299", options: .init(cardType: .visa))
+        let isVisa = validator.creditCardNumberValidator("4263982640269299", options: .init(cardType: .visa))
         switch isVisa {
         case .success:
             XCTAssertTrue(true)
@@ -22,9 +22,8 @@ internal final class CreditCardValidatorTests: XCTestCase {
             XCTFail("Expected to be a success but got a failure with \(error)")
         }
     }
-    
     internal func testValidCreditCardVisaWithSeparator() {
-        let isVisa = validator.creditCardValidator("4263-9826-4026-9299", options: .init(cardType: .visa, separator: "-"))
+        let isVisa = validator.creditCardNumberValidator("4263-9826-4026-9299", options: .init(cardType: .visa, separator: "-"))
         switch isVisa {
         case .success:
             XCTAssertTrue(true)
@@ -32,7 +31,6 @@ internal final class CreditCardValidatorTests: XCTestCase {
             XCTFail("Expected to be a success but got a failure with \(error)")
         }
     }
-    
     internal func testValidCreditCardExpiryDateVisa() {
         let isVisa = validator.creditCardExpiredDateValidator(expiryDate: "12/2023", options: .init(cardType: .visa))
         switch isVisa {
@@ -54,7 +52,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     }
     
     internal func testValidCreditCardMasterCard() {
-        let isVisa = validator.creditCardValidator("5425233430109903", options: .init(cardType: .mastercard))
+        let isVisa = validator.creditCardNumberValidator("5425233430109903", options: .init(cardType: .mastercard))
         switch isVisa {
         case .success:
             XCTAssertTrue(true)
@@ -64,7 +62,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     }
     
     internal func testValidCreditCardMasterCardWithSeparator() {
-        let isVisa = validator.creditCardValidator("5425-2334-3010-9903", options: .init(cardType: .mastercard, separator: "-"))
+        let isVisa = validator.creditCardNumberValidator("5425-2334-3010-9903", options: .init(cardType: .mastercard, separator: "-"))
         switch isVisa {
         case .success:
             XCTAssertTrue(true)
@@ -94,7 +92,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     }
     
     internal func testValidCreditCardAmex() {
-        let isVisa = validator.creditCardValidator("3722222222222222", options: .init(cardType: .amex))
+        let isVisa = validator.creditCardNumberValidator("3722222222222222", options: .init(cardType: .amex))
         switch isVisa {
         case .success:
             XCTAssertTrue(true)
@@ -104,7 +102,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     }
     
     internal func testValidCreditCardAmexWithSeparator() {
-        let isVisa = validator.creditCardValidator("3722-2222-2222-2222", options: .init(cardType: .amex, separator: "-"))
+        let isVisa = validator.creditCardNumberValidator("3722-2222-2222-2222", options: .init(cardType: .amex, separator: "-"))
         switch isVisa {
         case .success:
             XCTAssertTrue(true)
@@ -136,7 +134,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     
     // Invalid
     internal func testInvalidCreditCardVisa() {
-        let isVisa = validator.creditCardValidator("1263982640269299", options: .init(cardType: .visa))
+        let isVisa = validator.creditCardNumberValidator("1263982640269299", options: .init(cardType: .visa))
         switch isVisa {
         case .success:
             XCTFail("Expected to be a failure but got success")
@@ -156,7 +154,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     }
     
     internal func testInvalidCreditCardMasterCard() {
-        let isVisa = validator.creditCardValidator("5725233430109903", options: .init(cardType: .mastercard))
+        let isVisa = validator.creditCardNumberValidator("5725233430109903", options: .init(cardType: .mastercard))
         switch isVisa {
         case .success:
             XCTFail("Expected to be a failure but got success")
@@ -186,7 +184,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
     }
     
     internal func testInvalidCreditCardAmex() {
-        let isVisa = validator.creditCardValidator("3622222222222222", options: .init(cardType: .amex))
+        let isVisa = validator.creditCardNumberValidator("3622222222222222", options: .init(cardType: .amex))
         switch isVisa {
         case .success:
             XCTFail("Expected to be a failure but got success")

@@ -129,7 +129,7 @@ public class SuperValidator {
     ///    - options: credit card  options
     /// - Returns: the response either .success(()) or let .failure(let error)
     public func validateCreditCardNumber(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
-        return creditCardValidator(string, options: options)
+        return creditCardNumberValidator(string, options: options)
     }
     
     /// Custom Email Validation

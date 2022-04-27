@@ -44,17 +44,14 @@ public enum CreditCardType {
 extension SuperValidator.Option {
     public struct CreditCard {
         public let cardType: CreditCardType
-        public let cardInformation: CreditCardInformation
         public let separator: String
         public init(
             cardType: CreditCardType = .visa,
             separator: String = "",
-            expiredDate: String = "",
-            cardInformation: CreditCardInformation = .visa
+            expiredDate: String = ""
         ) {
             self.cardType = cardType
             self.separator = separator
-            self.cardInformation = cardInformation
         }
     }
 }
@@ -75,7 +72,7 @@ extension SuperValidator {
 }
 
 extension SuperValidator {
-    internal func creditCardValidator(_ cardNumber: String,options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    internal func creditCardNumberValidator(_ cardNumber: String,options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
         var tempCardNumber = cardNumber
         /// Using separator
         if options.separator.isNotEmpty {
