@@ -139,7 +139,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got success")
         case .failure(let error):
-            XCTAssertEqual(error, SuperValidator.CreditCardError.invalidCard)
+            XCTAssertEqual(error, SuperValidator.CardNumberError.invalidCardNumber)
         }
     }
     
@@ -149,7 +149,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got success")
         case .failure(let error):
-            XCTAssertEqual(error, SuperValidator.CreditCardError.invalidExpiredDate)
+            XCTAssertEqual(error, SuperValidator.CardExpiryDateError.invalidExpiredDate)
         }
     }
     
@@ -159,7 +159,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got success")
         case .failure(let error):
-            XCTAssertEqual(error, SuperValidator.CreditCardError.invalidCard)
+            XCTAssertEqual(error, SuperValidator.CardNumberError.invalidCardNumber)
         }
     }
     
@@ -169,7 +169,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got success")
         case .failure(let error):
-            XCTAssertEqual(error, SuperValidator.CreditCardError.invalidExpiredDate)
+            XCTAssertEqual(error, SuperValidator.CardExpiryDateError.invalidExpiredDate)
         }
     }
     
@@ -179,7 +179,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got success")
         case .failure(let error):
-            XCTAssertEqual(error, SuperValidator.CreditCardError.invalidCSC)
+            XCTAssertEqual(error, SuperValidator.CardCSCError.invalidCSC)
         }
     }
     
@@ -189,7 +189,7 @@ internal final class CreditCardValidatorTests: XCTestCase {
         case .success:
             XCTFail("Expected to be a failure but got success")
         case .failure(let error):
-            XCTAssertEqual(error, SuperValidator.CreditCardError.invalidCard)
+            XCTAssertEqual(error, SuperValidator.CardNumberError.invalidCardNumber)
         }
     }
 }

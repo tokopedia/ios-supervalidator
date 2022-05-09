@@ -58,21 +58,40 @@ extension SuperValidator.Option {
 
 // MARK: - Error
 extension SuperValidator {
-    public enum CreditCardError: Error, LocalizedError {
-        case invalidCard
+    /// Error Description for Credit Card Number
+    public enum CardNumberError: Error, LocalizedError {
+        case invalidCardNumber
+        public var errorDescription: String? {
+            switch self {
+            case .invalidCardNumber:
+                return nil
+            }
+        }
+    }
+    /// Error Description for CrediCard Expiry Date
+    public enum CardExpiryDateError: Error, LocalizedError {
         case invalidExpiredDate
+        public var errorDescription: String? {
+            switch self {
+            case .invalidExpiredDate:
+                return nil
+            }
+        }
+    }
+    /// Error Description for CrediCard CSC (Card Security Code)
+    public enum CardCSCError: Error, LocalizedError {
         case invalidCSC
         public var errorDescription: String? {
             switch self {
-                case .invalidCard, .invalidExpiredDate, .invalidCSC:
-                    return nil
+            case .invalidCSC:
+                return nil
             }
         }
     }
 }
 
 extension SuperValidator {
-    internal func creditCardNumberValidator(_ cardNumber: String,options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    internal func creditCardNumberValidator(_ cardNumber: String,options: Option.CreditCard = .init()) -> Result<Void, CardNumberError> {
         var tempCardNumber = cardNumber
         /// Using separator
         if options.separator.isNotEmpty {
@@ -84,25 +103,25 @@ extension SuperValidator {
         switch options.cardType {
             case .visa:
                 guard tempCardNumber.matches(Regex.visa) else {
-                    return .failure(.invalidCard)
+                    return .failure(.invalidCardNumber)
                 }
             case .mastercard:
                 guard tempCardNumber.matches(Regex.masterCard) else {
-                    return .failure(.invalidCard)
+                    return .failure(.invalidCardNumber)
                 }
             case .amex:
                 guard tempCardNumber.matches(Regex.amex) else {
-                    return .failure(.invalidCard)
+                    return .failure(.invalidCardNumber)
                 }
             case .discover:
                 guard tempCardNumber.matches(Regex.discover) else {
-                    return .failure(.invalidCard)
+                    return .failure(.invalidCardNumber)
                 }
         }
         return .success(())
     }
     
-    internal func creditCardExpiredDateValidator(expiryDate: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    internal func creditCardExpiredDateValidator(expiryDate: String, options: Option.CreditCard = .init()) -> Result<Void, CardExpiryDateError> {
         /// Expiry date should less than today
         if expiryDate.toDate() ?? Date() < Date() {
             return .failure(.invalidExpiredDate)
@@ -110,7 +129,7 @@ extension SuperValidator {
         return .success(())
     }
     
-    internal func creditCardCSCValidator(csc: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    internal func creditCardCSCValidator(csc: String, options: Option.CreditCard = .init()) -> Result<Void, CardCSCError> {
         /// csc length should equal than card type
         if csc.count != options.cardType.cardSecurityCodeLength {
             return .failure(.invalidCSC)

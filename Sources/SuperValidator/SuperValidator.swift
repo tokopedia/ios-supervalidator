@@ -128,7 +128,7 @@ public class SuperValidator {
     ///    - string: credit card number in String
     ///    - options: credit card  options
     /// - Returns: the response either .success(()) or let .failure(let error)
-    public func validateCreditCardNumber(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    public func validateCreditCardNumber(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CardNumberError> {
         return creditCardNumberValidator(string, options: options)
     }
     
@@ -152,7 +152,7 @@ public class SuperValidator {
     ///    - options: credit card  options
     /// - Returns: the response either .success(()) or let .failure(let error)
     /// Input paramt
-    public func validateCreditCardExpiredDate(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    public func validateCreditCardExpiredDate(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CardExpiryDateError> {
         return creditCardExpiredDateValidator(expiryDate: string, options: options)
     }
     
@@ -176,7 +176,7 @@ public class SuperValidator {
     ///    - options: credit card  options
     /// - Returns: the response either .success(()) or let .failure(let error)
     /// Input paramt
-    public func validateCreditCardCSC(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CreditCardError> {
+    public func validateCreditCardCSC(_ string: String, options: Option.CreditCard = .init()) -> Result<Void, CardCSCError> {
         return creditCardCSCValidator(csc: string, options: options)
     }
     
