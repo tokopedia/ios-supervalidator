@@ -139,7 +139,7 @@ extension SuperValidator {
 }
 
 extension String {
-    internal func toDate(withFormat format: String = "MM/yyyy") -> Date? {
+    internal func toCreditCardExpiryDate(withFormat format: String = "MM/yyyy") -> Date? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         let date = dateFormatter.date(from: self)
