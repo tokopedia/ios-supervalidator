@@ -123,7 +123,7 @@ extension SuperValidator {
     
     internal func creditCardExpiredDateValidator(expiryDate: String, options: Option.CreditCard = .init()) -> Result<Void, CardExpiryDateError> {
         /// Expiry date should less than today
-        if expiryDate.toDate() ?? Date() < Date() {
+        if expiryDate.toCreditCardExpiryDate() ?? Date() < Date() {
             return .failure(.invalidExpiredDate)
         }
         return .success(())
