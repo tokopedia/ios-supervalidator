@@ -106,4 +106,4 @@ SuperValidator is written and maintaned by Tokopedia iOS Superman Squad. [Alvin 
 
 ##  License
 
-This library is released under the Apache license. See [LICENSE](https://github.com/tokopedia/ios-supervalidator/blob/LICENSE.md) for details.
+This library is released under the Apache license. See [LICENSE](https://github.com/tokopedia/ios-supervalidator/blob/main/LICENSE.md) for details.
