@@ -27,8 +27,8 @@ class SuperValidatorTextField: UITextField {
     var textError: ((String) -> Void)? = nil
     var superValidator = SuperValidator.shared
     
-    func bind(textCompletion: @escaping (String) -> Void, textErrorCompletion: @escaping (String) -> Void, validator: Validator) {
-        textEdited = textCompletion
+    func bind(textChangedCompletion: @escaping (String) -> Void, textErrorCompletion: @escaping (String) -> Void, validator: Validator) {
+        textEdited = textChangedCompletion
         textError = textErrorCompletion
         switch validator {
             case .email:
