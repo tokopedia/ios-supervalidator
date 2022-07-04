@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
   s.name             = 'SuperValidator'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of SuperValidator.'
+  s.version          = '0.1.1'
+  s.summary          = 'SuperValidator is option-based validator for Swift.'
 
   s.homepage         = 'https://github.com/tokopedia/ios-supervalidator'
   s.license          = { :type => 'MIT', :file => 'LICENSE.md' }
