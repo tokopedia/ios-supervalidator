@@ -15,7 +15,7 @@ internal final class URLValidatorTests: XCTestCase {
     // MARK: - Default Options
     
     internal func testValidURL_UseDefaultOptions() {
-        let url = "https://www.example.com/path/test?myID=123&myName=test#Test"
+        let url = "https://tokopedia.testingbranch.link/tD2jDcLZirb"
         let isURL = self.validator.isURL(url)
         XCTAssertTrue(isURL)
     }
